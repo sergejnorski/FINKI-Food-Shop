@@ -1,14 +1,13 @@
-package com.finki.service;
+package com.finki.service.impl;
 
 import com.finki.config.JwtProvider;
 import com.finki.model.User;
 import com.finki.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.finki.service.UserService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
 

@@ -19,7 +19,6 @@ import java.util.Collections;
 @Configuration
 @EnableWebSecurity
 public class AppConfig {
-
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -60,5 +59,4 @@ public class AppConfig {
     PasswordEncoder passwordEncoder (){
         return new BCryptPasswordEncoder();
     }
-
 }

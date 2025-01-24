@@ -8,8 +8,7 @@ import com.finki.repository.CartRepository;
 import com.finki.repository.UserRepository;
 import com.finki.request.LoginRequest;
 import com.finki.response.AuthResponse;
-import com.finki.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.finki.service.impl.CustomUserDetailsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +25,6 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
@@ -106,5 +104,4 @@ public class AuthController {
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-
 }

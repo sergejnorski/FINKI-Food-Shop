@@ -12,7 +12,6 @@ import java.util.*;
 
 @Service
 public class JwtProvider {
-
     private SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
     public String generateToken(Authentication auth){
@@ -46,5 +45,4 @@ public class JwtProvider {
 
         return String.join(",", auths);
     }
-
 }
