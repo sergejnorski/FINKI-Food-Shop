@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
 
-    @Autowired
-    private JwtProvider jwtProvider;
+    public UserServiceImpl(UserRepository userRepository, JwtProvider jwtProvider) {
+        this.userRepository = userRepository;
+        this.jwtProvider = jwtProvider;
+    }
 
     @Override
     public User findUserByJwtToken(String jwt) throws Exception {

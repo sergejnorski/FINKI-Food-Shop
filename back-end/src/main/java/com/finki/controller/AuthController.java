@@ -27,20 +27,19 @@ import java.util.Collection;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtProvider jwtProvider;
+    private final CustomUserDetailsService customUserDetailsService;
+    private final CartRepository cartRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtProvider jwtProvider;
-
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
-
-    @Autowired
-    private CartRepository cartRepository;
+    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider, CustomUserDetailsService customUserDetailsService, CartRepository cartRepository) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtProvider = jwtProvider;
+        this.customUserDetailsService = customUserDetailsService;
+        this.cartRepository = cartRepository;
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse>createUserHandler(@RequestBody User user) throws Exception {
