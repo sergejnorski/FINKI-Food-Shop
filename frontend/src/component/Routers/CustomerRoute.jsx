@@ -6,6 +6,7 @@ import RestaurantDetails from '../Restaurant/RestaurantDetails'
 import Cart from '../Cart/Cart'
 import Profile from '../Profile/Profile'
 import { Navbar } from '../Navbar/Navbar'
+import { Auth } from '../Auth/Auth'
 
 export const CustomerRoute = () =>{
     return(
@@ -18,6 +19,7 @@ export const CustomerRoute = () =>{
                 <Route path='/cart' element={<Cart/>}/>
                 <Route path='/my-profile/*' element={<Profile/>}/>
             </Routes>
+            <Auth/>
         </div>
     )
 }

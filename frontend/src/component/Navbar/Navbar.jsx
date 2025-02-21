@@ -4,8 +4,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { Avatar } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import "./Navbar.css"
+import { Person } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 export const Navbar = () =>{
+    const navigate=useNavigate()
     return(
         <Box className='px-5 sticky top-0 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between'>
         
@@ -22,7 +25,10 @@ export const Navbar = () =>{
                     </IconButton>
                 </div>
                 <div className=''>
-                    <Avatar sx={{bgcolor:"white",color:"#FFC0CB"}}>C</Avatar>
+                    { false?<Avatar sx={{bgcolor:"white",color:"#FFC0CB"}}>C</Avatar>:
+                    <IconButton onClick={()=>navigate("/account/login")}>
+                        <Person/>
+                    </IconButton>}
                 </div>
                 <div className=''>
                     <IconButton>

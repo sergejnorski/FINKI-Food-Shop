@@ -18,6 +18,7 @@ function App() {
       {/* <Cart/> */}
       {/* <Profile/> */}
       <CustomerRoute/>
+      
     </ThemeProvider>
   );
 }
