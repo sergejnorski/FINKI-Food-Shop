@@ -41,6 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setOpeningHours(req.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
+        restaurant.setOpen(true);
 
         return restaurantRepository.save(restaurant);
     }
