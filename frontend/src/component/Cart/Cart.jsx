@@ -1,14 +1,13 @@
 import { Box, Button, Card, Divider, Grid, Modal, TextField } from '@mui/material'
-import React from 'react'
+import React, {useEffect} from 'react'
 import { CartItem } from './CartItem'
 import { AddressCard } from './AddressCard'
-import AddLocationAltIcon from '@mui/icons-material/AddLocationAlt';
-import AddLocationIcon from '@mui/icons-material/AddLocation';
 import { AddLocation } from '@mui/icons-material';
-import { ErrorMessage, Field, Form, Formik } from 'formik';
-// import * as Yup from "yup"
+import { Field, Form, Formik } from 'formik';
+import {useDispatch, useSelector} from "react-redux";
+import {getAllCartItems} from "../../State/Cart/Action";
+import {createOrder} from "../../State/Order/Action";
 
-const items = [1, 1]
 export const style = {
     position: 'absolute',
     top: '50%',
@@ -33,21 +32,44 @@ const initialValues={
 // city:Yup.string().required("city is required")
 // })
 export const Cart = () => {
+
     const createOrderUsingSelectedAddress = () => {
 
     }
     const handleOpenAddressModal = () => setOpen(true);
-    const [open, setOpen] = React.useState(false); 
+    const [open, setOpen] = React.useState(false);
+    const {cart, auth} = useSelector(store => store);
     const handleClose = () => setOpen(false);
-    const handleSubmit=(values)=>{
-        console.log("form value ",values)
+  const dispatch = useDispatch();
+  const handleSubmit = (values) => {
+    const data = {
+      jwt: localStorage.getItem("jwt"),
+      order: {
+        restaurantId: cart.cartItems[0].food?.restaurant.id,
+        deliveryAddress: {
+          fullName: auth.user?.fullName,
+          streetAddress: values.streetAddress,
+          city: values.city,
+          state: values.state,
+          postalCode: values.pincode,
+          country: "Македонија",
+        }
+      }
     }
+    dispatch(createOrder(data));
+  }
+
+  useEffect(() => {
+    const reqData = {cartId: cart.cart?.id, token: localStorage.getItem("jwt")}
+    dispatch(getAllCartItems(reqData));
+  }, []);
+
     return (
         <>
             <main className='lg:flex justify-between'>
                 <section className='lg:w-[30%] space-y-6 lg:min-h-screen pt-10'>
 
-                    {items.map((item) => (<CartItem />))}
+                    {cart.cartItems ? cart.cartItems.map((item) => (<CartItem key={item.id} item={item}/>)) : []}
                     <Divider />
                     <div className='billDetails px-5 text-sm'>
                         <p className='font-extralight py-5'>
@@ -55,22 +77,22 @@ export const Cart = () => {
                         </p>
                         <div className='space-y-3'>
                             <div className='flex justify-between text-gray-400'>
-                                <p>Item Total</p>
-                                <p>500 Ден</p>
+                                <p>Вкупно</p>
+                                <p>{cart.cart?.total} ден.</p>
                             </div>
                             <div className='flex justify-between text-gray-400'>
-                                <p>Delivery Fee</p>
-                                <p>80 Ден</p>
+                                <p>Достава</p>
+                                <p>80 ден.</p>
                             </div>
                             <div className='flex justify-between text-gray-400'>
-                                <p>DDV</p>
-                                <p>18%</p>
+                                <p>DDV 18%</p>
+                                <p>{Math.ceil(+cart.cart?.total * 0.18)} ден.</p>
                             </div>
                             <Divider />
                         </div>
                         <div className='flex justify-between text-gray-400'>
                             <p>Вкупно</p>
-                            <p>628 Ден</p>
+                            <p>{cart.cart?.total + Math.ceil(+cart.cart?.total*0.18) + 80} ден.</p>
                         </div>
                     </div>
                 </section>
@@ -101,8 +123,8 @@ export const Cart = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Formik initialValues={initialValues} 
-                    // validationSchema={validationSchema} 
+                    <Formik initialValues={initialValues}
+                    // validationSchema={validationSchema}
                     onSubmit={handleSubmit}>
                         <Form>
                             <Grid container spacing={2}>
@@ -167,7 +189,7 @@ export const Cart = () => {
                                 </Grid>
                             </Grid>
                         </Form>
-                            
+
                     </Formik>
                 </Box>
             </Modal>

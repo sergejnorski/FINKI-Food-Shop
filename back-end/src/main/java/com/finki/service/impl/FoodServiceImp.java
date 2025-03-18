@@ -103,7 +103,7 @@ public class FoodServiceImp implements FoodService {
     public Food findFoodById(Long foodId) throws Exception {
         Optional<Food> optionalFood=foodRepository.findById(foodId);
 
-        if(optionalFood.isPresent()){
+        if(optionalFood.isEmpty()){
             throw new Exception("food not exist...");
         }
         return optionalFood.get();

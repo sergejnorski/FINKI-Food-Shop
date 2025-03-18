@@ -5,16 +5,25 @@ import {CustomerRoute} from './component/Routers/CustomerRoute';
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./State/Authentication/Action";
+import {findCart, getAllCartItems} from "./State/Cart/Action";
 
 function App() {
 
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {auth} = useSelector(store => store);
+  const {auth, cart} = useSelector(store => store);
+  const reqData = {cartId: cart.cart?.id, token: jwt}
 
   useEffect(() => {
     dispatch(getUser(auth.jwt || jwt))
+    dispatch(findCart(jwt));
+    dispatch(getAllCartItems(reqData));
   }, [auth.jwt]);
+
+  useEffect(() => {
+    if (!cart.cart?.id) return;
+    dispatch(getAllCartItems({ cartId: cart.cart.id, token: jwt }));
+  }, [cart.cart?.id]);
 
   return (
     <ThemeProvider theme={darkTheme}>

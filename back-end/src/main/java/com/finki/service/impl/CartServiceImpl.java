@@ -6,15 +6,14 @@ import com.finki.model.Food;
 import com.finki.model.User;
 import com.finki.repository.CartItemRepository;
 import com.finki.repository.CartRepository;
-import com.finki.repository.FoodRepository;
 import com.finki.request.AddCartItemRequest;
 import com.finki.service.CartService;
 import com.finki.service.FoodService;
 import com.finki.service.UserService;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -141,5 +140,11 @@ public class CartServiceImpl implements CartService {
         cart.getItem().clear();
 
         return cartRepository.save(cart);
+    }
+
+    @Override
+    public List<CartItem> getCartItems(Long cartId) throws Exception {
+        Cart cart = findCartById(cartId);
+        return cart.getItem();
     }
 }
