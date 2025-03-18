@@ -1,9 +1,7 @@
 package com.finki.controller;
 
 import com.finki.model.Food;
-import com.finki.model.Restaurant;
 import com.finki.model.User;
-import com.finki.request.CreateFoodRequest;
 import com.finki.service.FoodService;
 import com.finki.service.RestaurantService;
 import com.finki.service.UserService;
@@ -39,9 +37,9 @@ public class FoodController {
 
     @GetMapping("/restaurant/{restaurantId}")
     public ResponseEntity<List<Food>> getRestaurantFood(
-            @RequestParam boolean vagetarian,
-            @RequestParam boolean seasonal,
-            @RequestParam boolean nonveg,
+            @RequestParam(required = false) boolean vagetarian,
+            @RequestParam(required = false) boolean seasonal,
+            @RequestParam(required = false) boolean nonveg,
             @RequestParam(required = false) String food_category,
             @PathVariable Long restaurantId,
             @RequestHeader("Authorization") String jwt) throws Exception {

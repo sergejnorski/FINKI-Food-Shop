@@ -7,12 +7,11 @@ import com.finki.repository.FoodRepository;
 import com.finki.request.CreateFoodRequest;
 import com.finki.service.FoodService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,7 @@ public class FoodServiceImp implements FoodService {
         food.setIngredients(req.getIngredients());
         food.setSeasonal(req.isSeasional());
         food.setVegetarian(req.isVegetarin());
+        food.setCreationDate(new Date());
 
         Food savedFood =  foodRepository.save(food);
         restaurant.getFoods().add(savedFood);
