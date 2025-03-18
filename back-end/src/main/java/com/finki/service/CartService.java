@@ -4,6 +4,8 @@ import com.finki.model.Cart;
 import com.finki.model.CartItem;
 import com.finki.request.AddCartItemRequest;
 
+import java.util.List;
+
 public interface CartService {
 
     public CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception;
@@ -19,4 +21,7 @@ public interface CartService {
     public Cart findCartByUserId(Long userId) throws Exception;
 
     public Cart clearCart(Long userId) throws Exception;
+
+    public List<CartItem> getCartItems(Long cartId) throws Exception;
+
 }

@@ -8,15 +8,38 @@ import {
   FormGroup,
   Typography
 } from '@mui/material'
-import React from 'react'
+import React, {useState} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {categorizeIngredients} from "../util/categorizeIngredients";
+import {useDispatch} from "react-redux";
+import {addItemToCart} from "../../State/Cart/Action";
 
 const MenuCard = ({item}) => {
-  const handleCheckboxChange = (value) => {
-    console.log("value")
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const dispatch = useDispatch();
+
+  const handleCheckboxChange = (itemName) => {
+    if (selectedIngredients.includes(itemName)) {
+      setSelectedIngredients(selectedIngredients.filter((item) => item !== itemName));
+    } else {
+      setSelectedIngredients([...selectedIngredients, itemName]);
+    }
   }
-  console.log(item);
+
+  const handleAddItemToCart = (e) => {
+    e.preventDefault();
+    const reqData = {
+      token: localStorage.getItem("jwt"),
+      cartItem: {
+        foodId: item.id,
+        quantity: 1,
+        ingredients: selectedIngredients,
+      }
+    };
+    dispatch(addItemToCart(reqData));
+    console.log(reqData);
+  }
+
   return (
     <Accordion>
       <AccordionSummary
@@ -38,14 +61,14 @@ const MenuCard = ({item}) => {
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <form>
+        <form onSubmit={handleAddItemToCart}>
           <div className='flex gap-5 flex-wrap'>
             {Object.keys(categorizeIngredients(item.ingredients)).map((category) => (
               <div>
                 <p>{category}</p>
                 <FormGroup>
                   {categorizeIngredients(item.ingredients)[category].map((item) => (
-                    <FormControlLabel key={item.name} control={<Checkbox onChange={() => handleCheckboxChange(item)}/>}
+                    <FormControlLabel key={item.id} control={<Checkbox onChange={() => handleCheckboxChange(item.name)}/>}
                                       label={item.name}/>))}
 
                 </FormGroup>

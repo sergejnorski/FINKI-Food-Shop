@@ -1,17 +1,19 @@
 import {Badge, Box, IconButton} from '@mui/material'
-import React from 'react'
+import React, {useEffect} from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import {Avatar} from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import "./Navbar.css"
 import {Person} from '@mui/icons-material';
 import {useNavigate} from 'react-router-dom';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {getAllCartItems} from "../../State/Cart/Action";
 
 export const Navbar = () => {
   const navigate = useNavigate();
-  const {auth} = useSelector(store => store);
+  const {auth, cart} = useSelector(store => store);
 
+  console.log(cart)
   const handleAvatarClick = () => {
     if (auth.user.role === "ROLE_CUSTOMER") {
       navigate("/my-profile")
@@ -19,6 +21,13 @@ export const Navbar = () => {
       navigate("/admin/restaurant");
     }
   }
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const reqData = {cartId: cart.cart?.id, token: localStorage.getItem("jwt")}
+    dispatch(getAllCartItems(reqData));
+  }, []);
 
   return (
     <Box className='px-5 sticky top-0 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between'>
@@ -43,8 +52,8 @@ export const Navbar = () => {
             </IconButton>}
         </div>
         <div className=''>
-          <IconButton>
-            <Badge color='secondary' badgeContent={3}>
+          <IconButton onClick={() => navigate('/cart')}>
+            <Badge color='secondary' badgeContent={cart.cartItems?.length ?? cart.cart.item.length}>
               <ShoppingCartIcon sx={{fontSize: "1.5rem"}}/>
             </Badge>
           </IconButton>

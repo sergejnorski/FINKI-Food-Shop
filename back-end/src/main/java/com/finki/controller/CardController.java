@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class CardController {
@@ -70,6 +72,16 @@ public class CardController {
         Cart cart = cartService.findCartByUserId(user.getId());
 
         return new ResponseEntity<>(cart, HttpStatus.OK);
+    }
+
+    @GetMapping("/carts/{cartId}/items")
+    private ResponseEntity<?> getCartItems(@PathVariable Long cartId) {
+        try {
+            List<CartItem> cartItems = cartService.getCartItems(cartId);
+            return new ResponseEntity<>(cartItems, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 }
