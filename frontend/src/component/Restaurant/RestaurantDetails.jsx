@@ -24,7 +24,6 @@ const RestaurantDetails = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const {id} = useParams();
-  console.log(id);
 
   const handleFilter = (e) => {
     setFoodType(e.target.value)
@@ -33,9 +32,6 @@ const RestaurantDetails = () => {
   const handleFilterCategory = (e) => {
     setSelectedCategory(e.target.value)
   }
-
-  console.log("restaurant", restaurant);
-
   useEffect(() => {
     dispatch(getRestaurantById({jwt, restaurantId: id}));
     dispatch(getRestaurantsCategory({jwt, restaurantId: id}));

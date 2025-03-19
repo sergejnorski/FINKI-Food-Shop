@@ -13,7 +13,6 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const {auth, cart} = useSelector(store => store);
 
-  console.log(cart)
   const handleAvatarClick = () => {
     if (auth.user.role === "ROLE_CUSTOMER") {
       navigate("/my-profile")
@@ -52,11 +51,16 @@ export const Navbar = () => {
             </IconButton>}
         </div>
         <div className=''>
-          <IconButton onClick={() => navigate('/cart')}>
+          {auth.user ? <IconButton onClick={() => navigate('/cart')}>
             <Badge color='secondary' badgeContent={cart.cartItems?.length ?? cart.cart.item.length}>
               <ShoppingCartIcon sx={{fontSize: "1.5rem"}}/>
             </Badge>
-          </IconButton>
+          </IconButton> :
+            <IconButton onClick={() => navigate('/account/login')}>
+            <Badge color='secondary'>
+              <ShoppingCartIcon sx={{fontSize: "1.5rem"}}/>
+            </Badge>
+          </IconButton>}
         </div>
       </div>
     </Box>

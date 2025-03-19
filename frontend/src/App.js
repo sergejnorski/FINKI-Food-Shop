@@ -12,12 +12,10 @@ function App() {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const {auth, cart} = useSelector(store => store);
-  const reqData = {cartId: cart.cart?.id, token: jwt}
 
   useEffect(() => {
     dispatch(getUser(auth.jwt || jwt))
     dispatch(findCart(jwt));
-    dispatch(getAllCartItems(reqData));
   }, [auth.jwt]);
 
   useEffect(() => {
