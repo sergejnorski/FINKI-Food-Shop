@@ -37,7 +37,6 @@ const MenuCard = ({item}) => {
       }
     };
     dispatch(addItemToCart(reqData));
-    console.log(reqData);
   }
 
   return (

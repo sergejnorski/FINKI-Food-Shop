@@ -51,7 +51,6 @@ export const getAllRestaurantsAction = (token) => {
         },
       });
       dispatch({type: GET_ALL_RESTAURANTS_SUCCESS, payload: data});
-      console.log("all restaurant ", data);
     } catch (error) {
       console.error("catch error ", error);
       dispatch({type: GET_ALL_RESTAURANTS_FAILURE, payload: error});
@@ -85,7 +84,6 @@ export const getRestaurantByUserId = (jwt) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get restaurant by user id ", data);
       dispatch({type: GET_RESTAURANT_BY_USER_ID_SUCCESS, payload: data});
     } catch (error) {
       console.error("catch error ", error);
@@ -98,7 +96,6 @@ export const getRestaurantByUserId = (jwt) => {
 }
 
 export const createRestaurant = (reqData) => {
-  console.log("token------------", reqData.token);
   return async (dispatch) => {
     dispatch({type: CREATE_RESTAURANT_REQUEST});
     try {
@@ -108,7 +105,6 @@ export const createRestaurant = (reqData) => {
         },
       });
       dispatch({type: CREATE_RESTAURANT_SUCCESS, payload: data});
-      console.log("created restaurant ", data);
     } catch (error) {
       console.error("catch error ", error);
       dispatch({type: CREATE_RESTAURANT_FAILURE, payload: error})
@@ -142,10 +138,9 @@ export const deleteRestaurant = ({restaurantId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         }
       });
-      console.log("delete restaurant ", res.data);
       dispatch({type: DELETE_RESTAURANT_SUCCESS, payload: restaurantId});
     } catch (error) {
-      console.log("catch error ", error);
+      console.error("catch error ", error);
       dispatch({type: DELETE_RESTAURANT_FAILURE, payload: error});
     }
   }
@@ -160,10 +155,9 @@ export const updateRestaurantStatus = ({restaurantId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         }
       });
-      console.log("resssss ", res.data);
       dispatch({type: UPDATE_RESTAURANT_STATUS_SUCCESS, payload: res.data});
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
       dispatch({type: UPDATE_RESTAURANT_STATUS_FAILURE, payload: error});
     }
   }
@@ -178,7 +172,6 @@ export const createEventAction = ({data, jwt, restaurantId}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("create events ", res.data)
       dispatch({type: CREATE_EVENTS_SUCCESS, payload: res.data})
     } catch (error) {
       console.error("error ", error);
@@ -196,7 +189,6 @@ export const getAllEvents = ({jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get all events ", res.data)
       dispatch({type: GET_ALL_EVENTS_SUCCESS, payload: res.data})
     } catch (error) {
       console.error("error ", error);
@@ -214,7 +206,6 @@ export const deleteEventAction = ({eventId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("delete events ", res.data)
       dispatch({type: DELETE_EVENTS_SUCCESS, payload: eventId})
     } catch (error) {
       console.error("error ", error);
@@ -232,7 +223,6 @@ export const getRestaurantsEvents = ({restaurantId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get restaurants events ", res.data)
       dispatch({type: GET_RESTAURANTS_EVENTS_SUCCESS, payload: res.data})
     } catch (error) {
       console.error("error ", error);
@@ -250,7 +240,6 @@ export const createCategoryAction = ({reqData, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("create category ", res.data)
       dispatch({type: CREATE_CATEGORY_SUCCESS, payload: res.data})
     } catch (error) {
       console.error("error ", error);
@@ -268,7 +257,6 @@ export const getRestaurantsCategory = ({restaurantId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get restaurants category ", res.data)
       dispatch({type: GET_RESTAURANTS_CATEGORY_SUCCESS, payload: res.data})
     } catch (error) {
       console.error("error ", error);
