@@ -6,17 +6,18 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow, useNavigate
 } from "@mui/material";
 import {Create, Delete} from "@mui/icons-material";
 
 const orders = [1, 1, 1, 1, 1, 1, 1]
 
 export const MenuTable = () => {
+  const navigate = useNavigate();
   return (
     <Box>
       <Card className='mt-1'>
-        <CardHeader action={<IconButton aria-label="settings"><Create/></IconButton>} title={"Menu"}
+        <CardHeader action={<IconButton onClick={() => navigate("/admin/restaurant/add-menu")} aria-label="settings"><Create/></IconButton>} title={"Menu"}
                     sx={{paddingTop: "2rem", alignItems: "center"}}/>
         <TableContainer component={Paper}>
           <Table sx={{minWidth: 650}} aria-label="simple table">
