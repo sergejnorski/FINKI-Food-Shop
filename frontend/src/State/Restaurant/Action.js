@@ -1,4 +1,3 @@
-import {api} from "../../component/config/api";
 import {
   CREATE_CATEGORY_REQUEST,
   CREATE_CATEGORY_FAILURE,
@@ -40,6 +39,7 @@ import {
   DELETE_RESTAURANT_SUCCESS,
   DELETE_RESTAURANT_FAILURE
 } from "./ActionType";
+import {api} from "../../component/config/api";
 
 export const getAllRestaurantsAction = (token) => {
   return async (dispatch) => {

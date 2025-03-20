@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./State/Authentication/Action";
 import {findCart, getAllCartItems} from "./State/Cart/Action";
 import {Routers} from "./component/Routers/Routers";
+import {getRestaurantByUserId} from "./State/Restaurant/Action";
 
 function App() {
 
@@ -17,6 +18,11 @@ function App() {
     dispatch(getUser(auth.jwt || jwt))
     dispatch(findCart(jwt));
   }, [auth.jwt]);
+
+  useEffect(() => {
+    dispatch(getRestaurantByUserId(auth.jwt || jwt));
+
+  }, [auth.user]);
 
   useEffect(() => {
     if (!cart.cart?.id) return;

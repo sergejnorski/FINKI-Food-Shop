@@ -8,12 +8,36 @@ import {Events} from "../Events/Events";
 import {RestaurantDetails} from "./RestaurantDetails";
 import {RestaurantDashboard} from "../Dashboard/RestaurantDashboard";
 import CreateMenuForm from "../Menu/CreateMenuForm";
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect} from "react";
+import {getRestaurantById, getRestaurantsCategory} from "../../State/Restaurant/Action";
+import {getMenuItemsByRestaurantId} from "../../State/Menu/Action";
+import {getUsersOrders} from "../../State/Order/Action";
+import {fetchRestaurantsOrder} from "../../State/RestaurantOrder/Action";
 
 export const Admin = () => {
+
+  const dispatch=useDispatch();
+  const jwt=localStorage.getItem("jwt");
+  const {restaurant} = useSelector((store) => store);
 
   const handleClose = () => {
 
   }
+
+  useEffect(() => {
+    dispatch(
+        getRestaurantsCategory({
+          jwt,
+          restaurantId: restaurant.usersRestaurant?.id,
+        })
+    );
+
+    dispatch(fetchRestaurantsOrder({
+      jwt,
+      restaurantId: restaurant.usersRestaurant?.id,
+    }))
+  }, []);
 
   return (
     <div>

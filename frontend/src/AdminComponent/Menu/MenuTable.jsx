@@ -6,9 +6,10 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow, useNavigate
+  TableRow
 } from "@mui/material";
 import {Create, Delete} from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
 
 const orders = [1, 1, 1, 1, 1, 1, 1]
 

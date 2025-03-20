@@ -1,5 +1,5 @@
 import {Grid2} from "@mui/material";
-import {IngredientTable} from "./IngredientTable";
+import IngredientTable from "./IngredientTable";
 import {IngredientCategoryTable} from "./IngredientCategoryTable";
 
 export const Ingredients = () => {
