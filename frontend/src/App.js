@@ -1,23 +1,21 @@
 import './App.css';
 import {CssBaseline, ThemeProvider} from '@mui/material';
 import {darkTheme} from './Theme/DarkTheme';
-import {CustomerRoute} from './component/Routers/CustomerRoute';
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./State/Authentication/Action";
 import {findCart, getAllCartItems} from "./State/Cart/Action";
+import {Routers} from "./component/Routers/Routers";
 
 function App() {
 
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const {auth, cart} = useSelector(store => store);
-  const reqData = {cartId: cart.cart?.id, token: jwt}
 
   useEffect(() => {
     dispatch(getUser(auth.jwt || jwt))
     dispatch(findCart(jwt));
-    dispatch(getAllCartItems(reqData));
   }, [auth.jwt]);
 
   useEffect(() => {
@@ -28,7 +26,7 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline/>
-      <CustomerRoute/>
+      <Routers/>
     </ThemeProvider>
   );
 }

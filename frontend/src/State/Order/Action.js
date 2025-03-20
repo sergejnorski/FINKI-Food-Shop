@@ -16,7 +16,6 @@ export const createOrder = (reqData) => {
           Authorization: `Bearer ${reqData.jwt}`,
         },
       });
-      console.log("created order data ", data);
       dispatch({type: CREATE_ORDER_SUCCESS, payload: data});
     } catch (error) {
       console.error("error ", error);
@@ -34,7 +33,6 @@ export const getUsersOrders = (jwt) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("users order data ", data);
       dispatch({type: GET_USERS_ORDERS_SUCCESS, payload: data});
     } catch (error) {
       console.error("error ", error);

@@ -14,10 +14,9 @@ export const getIngredientsOfRestaurant = ({id, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get all ingredients ", response.data);
       dispatch({type: GET_INGREDIENTS, payload: response.data});
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
     }
   }
 }
@@ -30,16 +29,14 @@ export const createIngredient = ({data, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("create ingredients ", response.data);
       dispatch({type: CREATE_INGREDIENT_SUCCESS, payload: response.data});
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
     }
   }
 }
 
 export const createIngredientCategory = ({data, jwt}) => {
-  console.log("data ", data, "jwt ",jwt);
   return async (dispatch) => {
     try {
       const response = await api.post(`/api/admin/ingredients/category`, data, {
@@ -47,10 +44,9 @@ export const createIngredientCategory = ({data, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("create ingredients category ", response.data);
       dispatch({type: CREATE_INGREDIENT_CATEGORY_SUCCESS, payload: response.data});
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
     }
   }
 }
@@ -63,10 +59,9 @@ export const getIngredientCategory = ({id, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("get ingredients category ", response.data);
       dispatch({type: GET_INGREDIENT_CATEGORY_SUCCESS, payload: response.data});
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
     }
   }
 }
@@ -80,9 +75,8 @@ export const updateStockOfIngredient = ({id, jwt}) => {
         },
       });
       dispatch({type: UPDATE_STOCK, payload: data});
-      console.log("update ingredients stock ", data);
     } catch (error) {
-      console.log("error ", error);
+      console.error("error ", error);
     }
   };
 };

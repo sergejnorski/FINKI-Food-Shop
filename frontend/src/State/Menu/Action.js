@@ -24,7 +24,6 @@ export const createMenuItem = ({menu, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("created menu ", data);
       dispatch({type: CREATE_MENU_ITEM_SUCCESS, payload: data});
     } catch (error) {
       console.error("catch error ", error);
@@ -42,7 +41,6 @@ export const getMenuItemsByRestaurantId = (reqData) => {
           Authorization: `Bearer ${reqData.jwt}`,
         },
       });
-      console.log("menu item by restaurants ", data);
       dispatch({type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS, payload: data});
     } catch (error) {
       console.error("catch error ", error);
@@ -60,7 +58,6 @@ export const searchMenuItem = ({keyword, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("data ------------ ", data);
       dispatch({type: SEARCH_MENU_ITEM_SUCCESS, payload: data});
     } catch (error) {
       console.error("catch error ", error);
@@ -78,7 +75,6 @@ export const searchMenuItem = ({keyword, jwt}) => {
 //           Authorization: `Bearer ${jwt}`,
 //         },
 //       });
-//       console.log("data ------------ ", data);
 //       dispatch({type: SEARCH_MENU_ITEM_SUCCESS, payload: data});
 //     } catch (error) {
 //       console.error("catch error ", error);
@@ -96,7 +92,6 @@ export const updateMenuItemsAvailability = ({foodId, jwt}) => {
           Authorization: `Bearer ${jwt}`,
         },
       });
-      console.log("update menuItems Availability ", data);
       dispatch({type: UPDATE_MENU_ITEMS_AVAILABILITY_SUCCESS, payload: data});
     } catch (error) {
       console.error("error ", error);
@@ -113,7 +108,6 @@ export const deleteFoodAction = ({foodId, jwt}) => async (dispatch) => {
         Authorization: `Bearer ${jwt}`,
       },
     });
-    console.log("delete food ", data);
     dispatch({type: DELETE_MENU_ITEM_SUCCESS, payload: foodId});
   } catch (error) {
     dispatch({type: DELETE_MENU_ITEM_FAILURE, payload: error});
