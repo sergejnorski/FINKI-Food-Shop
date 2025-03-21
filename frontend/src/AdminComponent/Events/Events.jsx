@@ -3,6 +3,9 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import React from "react";
 import dayjs from "dayjs";
 import {DateTimePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import { useDispatch, useSelector } from 'react-redux';
+
+import { createEventAction } from "../../State/Restaurant/Action";
 
 const style = {
     position: 'absolute',
@@ -32,9 +35,15 @@ export const Events = () => {
     const handleClose = () => setOpen(false);
     const [formValues, setFormValues] = React.useState(initialValues);
 
+    const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const { restaurant, restaurantOrder, ingredients, menu } = useSelector((store) => store);
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submit ", formValues)
+        dispatch(createEventAction({data:formValues,restaurantId:restaurant.usersRestaurant?.id,jwt}))
         setFormValues(initialValues)
 
     }
