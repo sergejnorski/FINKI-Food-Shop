@@ -26,18 +26,16 @@ public class AdminOrderController {
             @PathVariable Long id,
             @RequestParam(required = false) String order_status,
             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
         List<Order> orders = orderService.getRestaurantsOrder(id,order_status);
 
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @GetMapping("/order/{id}/{orderStatus}")
+    @PutMapping("/order/{id}/{orderStatus}")
     private ResponseEntity<Order> updateOrderStatus(
             @PathVariable Long id,
             @PathVariable String orderStatus,
             @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
         Order orders = orderService.updateOrder(id,orderStatus);
 
         return new ResponseEntity<>(orders, HttpStatus.OK);

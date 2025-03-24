@@ -20,7 +20,7 @@ export const MenuTable = () => {
   const navigate = useNavigate();
   const dispatch=useDispatch();
   const jwt=localStorage.getItem("jwt");
-  const {restaurant, ingredients,menu} = useSelector((store)=>store);
+  const {restaurant,menu} = useSelector((store)=>store);
   useEffect(()=>{
     dispatch(getMenuItemsByRestaurantId({
       jwt,
@@ -38,7 +38,7 @@ export const MenuTable = () => {
   return (
     <Box>
       <Card className='mt-1'>
-        <CardHeader action={<IconButton onClick={() => navigate("/admin/restaurant/add-menu")} aria-label="settings"><Create/></IconButton>} title={"Menu"}
+        <CardHeader action={<IconButton onClick={() => navigate("/admin/restaurants/add-menu")} aria-label="settings"><Create/></IconButton>} title={"Menu"}
                     sx={{paddingTop: "2rem", alignItems: "center"}}/>
         <TableContainer component={Paper}>
           <Table sx={{minWidth: 650}} aria-label="simple table">
@@ -58,7 +58,7 @@ export const MenuTable = () => {
                   key={item.id}
                   sx={{'&:last-child td, &:last-child th': {border: 0}}}
                 >
-                  <TableCell component="th" scope="row"><Avatar src={item.images[0]}></Avatar></TableCell>
+                  <TableCell component="th" scope="row"><Avatar src={item.images[0] || ""}></Avatar></TableCell>
                   <TableCell align="right">{item.name}</TableCell>
                   <TableCell align="right">{item.ingredients.map((ingredient)=><Chip label={ingredient.name}></Chip>)}</TableCell>
                   <TableCell align="right">{item.price}</TableCell>
