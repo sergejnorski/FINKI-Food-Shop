@@ -5,8 +5,6 @@ import com.finki.model.IngredientsItem;
 import com.finki.request.IngredientCategoryRequest;
 import com.finki.request.IngredientRequest;
 import com.finki.service.IngredientsService;
-import jakarta.persistence.Access;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +15,14 @@ import java.util.List;
 @RequestMapping("/api/admin/ingredients")
 public class IngredientController {
 
-    @Autowired
-    private IngredientsService ingredientsService;
+    private final IngredientsService ingredientsService;
+
+    public IngredientController(IngredientsService ingredientsService) {
+        this.ingredientsService = ingredientsService;
+    }
 
     @PostMapping("/category")
-    public ResponseEntity<IngredientCategory> createIngredientCategory(
-            @RequestBody IngredientCategoryRequest req
-            ) throws Exception {
+    public ResponseEntity<IngredientCategory> createIngredientCategory(@RequestBody IngredientCategoryRequest req) throws Exception {
 
         IngredientCategory item = ingredientsService.createIngredientCategory(req.getName(),req.getRestaurantId());
 
@@ -31,19 +30,15 @@ public class IngredientController {
     }
 
     @PostMapping()
-    public ResponseEntity<IngredientsItem> createIngredientItem(
-            @RequestBody IngredientRequest req
-    ) throws Exception {
+    public ResponseEntity<IngredientsItem> createIngredientItem(@RequestBody IngredientRequest req) throws Exception {
 
         IngredientsItem item = ingredientsService.createIngredientItem(req.getRestaurantId(),req.getName(),req.getCategoryId());
 
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}/stoke")
-    public ResponseEntity<IngredientsItem> updateIngredientStock(
-            @PathVariable Long id
-    ) throws Exception {
+    @PutMapping("/{id}/stock")
+    public ResponseEntity<IngredientsItem> updateIngredientStock(@PathVariable Long id) throws Exception {
 
         IngredientsItem item = ingredientsService.updateStock(id);
 
@@ -51,9 +46,7 @@ public class IngredientController {
     }
 
     @GetMapping("/restaurant/{id}")
-    public ResponseEntity<List<IngredientsItem>> getRestaurantIngredient(
-            @PathVariable Long id
-    ) throws Exception {
+    public ResponseEntity<List<IngredientsItem>> getRestaurantIngredient(@PathVariable Long id) throws Exception {
 
         List<IngredientsItem> items = ingredientsService.findRestaurantsIngredients(id);
 
@@ -61,9 +54,7 @@ public class IngredientController {
     }
 
     @GetMapping("restaurant/{id}/category")
-    public ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(
-            @PathVariable Long id
-    ) throws Exception {
+    public ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(@PathVariable Long id) throws Exception {
 
         List<IngredientCategory> items = ingredientsService.findIngredientCategoryByRestaurantId(id);
 

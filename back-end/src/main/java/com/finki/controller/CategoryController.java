@@ -4,7 +4,6 @@ import com.finki.model.Category;
 import com.finki.model.User;
 import com.finki.service.CategoryService;
 import com.finki.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +14,13 @@ import java.util.List;
 @RequestMapping("/api")
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public CategoryController(CategoryService categoryService, UserService userService) {
+        this.categoryService = categoryService;
+        this.userService = userService;
+    }
 
     @PostMapping("/admin/category")
     public ResponseEntity<Category> createCategory(@RequestBody Category category,
@@ -33,9 +34,8 @@ public class CategoryController {
     }
 
     @GetMapping("/category/restaurant/{id}")
-    public ResponseEntity<List<Category>> getRestaurantCategory(
-            @PathVariable Long id,
-                                                   @RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<List<Category>> getRestaurantCategory(@PathVariable Long id,
+                                                                @RequestHeader("Authorization") String jwt) throws Exception {
 
         User user = userService.findUserByJwtToken(jwt);
 

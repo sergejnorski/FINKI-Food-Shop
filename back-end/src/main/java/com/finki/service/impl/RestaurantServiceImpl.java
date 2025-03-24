@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
+
     private final RestaurantRepository restaurantRepository;
     private final AddressRepository addressRepository;
     private final UserRepository userRepository;
@@ -29,9 +30,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant createRestaurant(CreateRestaurantRequest req, User user) {
+
         Address address = addressRepository.save(req.getAddress());
 
         Restaurant restaurant = new Restaurant();
+
         restaurant.setAddress(address);
         restaurant.setContactInformation(req.getContactInformation());
         restaurant.setCuisineType(req.getCuisineType());
@@ -41,13 +44,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setOpeningHours(req.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
-        restaurant.setOpen(true);
 
         return restaurantRepository.save(restaurant);
     }
 
     @Override
     public Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequest updatedRestaurant) throws Exception {
+
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         if(restaurant.getCuisineType() != null){
@@ -65,6 +68,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public void deleteRestaurant(Long restaurantId) throws Exception {
+
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         restaurantRepository.delete(restaurant);
@@ -82,10 +86,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant findRestaurantById(Long restaurantId) throws Exception {
+
         Optional<Restaurant> opt = restaurantRepository.findById(restaurantId);
 
         if(opt.isEmpty()){
-            throw new Exception("Restaurant not found.");
+            throw new Exception("Restaurant Not Found.");
         }
 
         return opt.get();
@@ -93,10 +98,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant getRestaurantByUserId(Long userId) throws Exception {
+
         Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
 
         if(restaurant == null){
-            throw new Exception("Restaurant not found.");
+            throw new Exception("Restaurant Not Found.");
         }
 
         return restaurant;
@@ -104,16 +110,21 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantDto addToFavorites(Long restaurantId, User user) throws Exception {
+
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         RestaurantDto restaurantDto = new RestaurantDto();
+
         restaurantDto.setDescription(restaurant.getDescription());
         restaurantDto.setImages(restaurant.getImages());
         restaurantDto.setTitle(restaurant.getName());
         restaurantDto.setId(restaurant.getId());
+        restaurantDto.setOpen(restaurant.isOpen());
 
         boolean isFavorite = false;
+
         List<RestaurantDto> favorites = user.getFavorites();
+
         for(RestaurantDto favorite : favorites){
             if(favorite.getId().equals(restaurantId)){
                 isFavorite = true;
@@ -128,6 +139,8 @@ public class RestaurantServiceImpl implements RestaurantService {
             favorites.add(restaurantDto);
         }
 
+        user.setFavorites(favorites);
+
         userRepository.save(user);
 
         return restaurantDto;
@@ -135,6 +148,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant updateRestaurantStatus(Long restaurantId) throws Exception {
+
         Restaurant restaurant = findRestaurantById(restaurantId);
 
         restaurant.setOpen(!restaurant.isOpen());

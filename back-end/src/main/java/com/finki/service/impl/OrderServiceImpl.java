@@ -6,43 +6,38 @@ import com.finki.request.OrderRequest;
 import com.finki.service.CartService;
 import com.finki.service.OrderService;
 import com.finki.service.RestaurantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+    private final OrderitemRepository orderitemRepository;
+    private final AddressRepository addressRepository;
+    private final UserRepository userRepository;
+    private final RestaurantService restaurantService;
+    private final CartService cartService;
 
-    @Autowired
-    private OrderitemRepository orderitemRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RestaurantService restaurantService;
-
-    @Autowired
-    private CartService cartService;
+    public OrderServiceImpl(OrderRepository orderRepository, OrderitemRepository orderitemRepository, AddressRepository addressRepository, UserRepository userRepository, RestaurantService restaurantService, CartService cartService) {
+        this.orderRepository = orderRepository;
+        this.orderitemRepository = orderitemRepository;
+        this.addressRepository = addressRepository;
+        this.userRepository = userRepository;
+        this.restaurantService = restaurantService;
+        this.cartService = cartService;
+    }
 
     @Override
     public Order createOrder(OrderRequest order, User user) throws Exception {
 
-        Address shippAddress = order.getDeliveryAddress();
-
-        Address savedAddress = addressRepository.save(shippAddress);
+        Address shipAddress = order.getDeliveryAddress();
+        Address savedAddress = addressRepository.save(shipAddress);
 
         if(!user.getAddresses().contains(savedAddress)){
             user.getAddresses().add(savedAddress);
@@ -52,6 +47,7 @@ public class OrderServiceImpl implements OrderService {
         Restaurant restaurant = restaurantService.findRestaurantById(order.getRestaurantId());
 
         Order createdOrder = new Order();
+        createdOrder.setMobile(order.getDeliveryAddress().getMobile());
         createdOrder.setCustomer(user);
         createdOrder.setCreatedAt(new Date());
         createdOrder.setOrderStatus("PENDING");
@@ -73,10 +69,14 @@ public class OrderServiceImpl implements OrderService {
             orderItems.add(savedOrderItem);
         }
 
-        Long totalPrice = cartService.calculateCartTotals(cart);
+        Long totalPrice = cartService.calculateCartTotalsByRestaurantID(cart,restaurant);
 
         createdOrder.setItems(orderItems);
         createdOrder.setTotalPrice(totalPrice);
+
+        if(user.getOrders().contains(createdOrder)){
+            throw  new Exception("Order Duplicate.");
+        }
 
         Order savedOrder = orderRepository.save(createdOrder);
         restaurant.getOrders().add(savedOrder);
@@ -97,15 +97,14 @@ public class OrderServiceImpl implements OrderService {
             order.setOrderStatus(orderStatus);
             return orderRepository.save(order);
         }
-        throw new Exception("Please select a valid order status");
+        throw new Exception("Please select a valid order status.");
     }
 
     @Override
-    public void calcelOrder(Long orderId) throws Exception {
+    public void cancelOrder(Long orderId) throws Exception {
 
         Order order = findOrderById(orderId);
         orderitemRepository.deleteById(orderId);
-
     }
 
     @Override
@@ -115,6 +114,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getRestaurantsOrder(Long restaurantId, String orderStatus) throws Exception {
+
         List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
 
         if(orderStatus!=null){
@@ -131,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> optionalOrder = orderRepository.findById(orderId);
 
         if(optionalOrder.isEmpty()){
-            throw  new Exception("order not found");
+            throw  new Exception("Order Not Found.");
         }
 
         return optionalOrder.get();

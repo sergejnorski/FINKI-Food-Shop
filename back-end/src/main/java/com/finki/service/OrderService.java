@@ -12,7 +12,7 @@ public interface OrderService {
 
     public Order updateOrder(Long orderId, String orderStatus) throws Exception;
 
-    public void calcelOrder(Long orderId) throws Exception;
+    public void cancelOrder(Long orderId) throws Exception;
 
     public List<Order> getUsersOrder(Long userId) throws Exception;
 
