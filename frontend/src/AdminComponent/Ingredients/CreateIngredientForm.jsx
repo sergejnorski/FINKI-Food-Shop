@@ -1,28 +1,51 @@
 import React, {useState} from "react";
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mui/material";
+import {Button, FormControl, InputLabel, MenuItem, Select, TextField,FormHelperText} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createIngredient, createIngredientCategory} from "../../State/Ingredients/Action";
 
-const CreateIngredientForm = () => {
+const CreateIngredientForm = ({handleClose}) => {
 
-    const {restaurant, ingredients} = useSelector(store=>store)
+    const {restaurant, ingredient} = useSelector(store=>store)
     const dispatch=useDispatch();
     const jwt=localStorage.getItem("jwt");
 
     const [formData, setFormData] = useState({
-        name: "",
-        categoryId: "",
+        name: '',
+        ingredientCategoryId: '',
     });
+    const [errors, setErrors] = useState({
+        name: false,
+        ingredientCategoryId: false
+      });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data={
-            ...formData,
-            restaurantId:
-            restaurant.usersRestaurant.id
-        };
-        dispatch(createIngredient({data,jwt}))
-        console.log(data)
+        if(!formData.name.trim()){
+            setErrors((prevErrors)=>({
+                ...prevErrors,
+                name:true
+            }));
+            return;
+        }
+        if(!formData.ingredientCategoryId){
+            setErrors((prevErrors)=>({
+                ...prevErrors,
+                ingredientCategoryId: true
+            }));
+            return;
+        }
+        setErrors({
+            name: false,
+            ingredientCategoryId: false
+        })
+
+        const data = {
+            name: formData.name,
+            categoryId: formData.ingredientCategoryId,
+            restaurantId: restaurant?.usersRestaurant?.id
+          };
+         dispatch(createIngredient({data,jwt}))
+          handleClose();
 
     }
 
@@ -39,27 +62,35 @@ const CreateIngredientForm = () => {
                 <h1 className='text-gray-400 text-center text-xl pb-10'>Create Ingredient</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                 <TextField fullWidth
-                           id="name"
+                           id="ingredient"
                            name="name"
-                           label="Name"
+                           label="Ingredient"
                            variant="outlined"
                            onChange={handleInputChange}
-                           value={formData.name}>
+                           value={formData.name}
+                           error={errors.name}
+            helperText={errors.name ? 'Ingredient name is required' : ''}
+                           >
                 </TextField>
 
-                <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Ingredient</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={formData.ingredientCategoryId}
-                        label="Category"
-                        onChange={handleInputChange}
-                        name="categoryId"
-                    >
-                        {ingredients.category.map((item) =><MenuItem value={item.id}>{item.name}</MenuItem>)}
-                    </Select>
-                </FormControl>
+                <FormControl fullWidth variant="outlined" error={errors.ingredientCategoryId}>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              id="category"
+              name="ingredientCategoryId"
+              value={formData.ingredientCategoryId}
+              onChange={handleInputChange}
+              label="Category"
+            >
+              {ingredient?.category?.map((option) => (
+                <MenuItem key={option} value={option.id}>
+                  {option.name || 'Select Category'}
+                </MenuItem>
+              ))}
+            </Select>
+            {errors.ingredientCategoryId && <FormHelperText>Category is required</FormHelperText>}
+          </FormControl>
 
                 <Button variant="contained" type="submit">
                     Create Ingredient

@@ -14,20 +14,8 @@ import React, {useEffect} from "react";
 import CreateIngredientCategoryForm from "./CreateIngredientCategoryForm";
 import {useDispatch, useSelector} from "react-redux";
 import {getIngredientCategory} from "../../State/Ingredients/Action";
+import CreateIcon from '@mui/icons-material/Create';
 
-const orders = [1, 1, 1, 1, 1, 1, 1]
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 
 export const IngredientCategoryTable = () => {
@@ -36,32 +24,52 @@ export const IngredientCategoryTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
-  const {restaurant, ingredients} = useSelector(store=>store)
+  const {restaurant, ingredient} = useSelector(store=>store)
   const jwt=localStorage.getItem("jwt");
 
   useEffect(() => {
-    dispatch(getIngredientCategory({id: restaurant.usersRestaurant.id, jwt}))
+    dispatch(getIngredientCategory({id: restaurant?.usersRestaurant.id, jwt}))
 
   }, [])
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
   return (
     <Box>
       <Card className='mt-1'>
-        <CardHeader action={<IconButton onClick={handleOpen} aria-label="settings"><Create/></IconButton>}
-                    title={"Ingredient Category Table"}
-                    sx={{paddingTop: "2rem", alignItems: "center"}}/>
+      <CardHeader
+                    title={"Ingredient Category"}
+                    sx={{ pt: 2, alignItems: "center" }}
+                    action={
+                        <IconButton onClick={handleOpen}>
+                            <CreateIcon/>
+                        </IconButton>
+
+                    }
+                />
+        </Card>
         <TableContainer component={Paper}>
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Id</TableCell>
-                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Image</TableCell>
+                <TableCell align="left">Title</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredients.category.map((item) => (
+              {ingredient?.category?.map((item) => (
                 <TableRow
-                  key={item.name}
+                  key={item.id}
                   sx={{'&:last-child td, &:last-child th': {border: 0}}}
                 >
                   <TableCell component="th" scope="row">{item.id}</TableCell>
@@ -71,7 +79,7 @@ export const IngredientCategoryTable = () => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Card>
+      
 
       <Modal
           open={open}
@@ -80,7 +88,7 @@ export const IngredientCategoryTable = () => {
           aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <CreateIngredientCategoryForm/>
+          <CreateIngredientCategoryForm handleClose={handleClose}/>
         </Box>
       </Modal>
 

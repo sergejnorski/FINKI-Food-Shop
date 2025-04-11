@@ -3,13 +3,16 @@ import {useState} from "react";
 import {OrderTable} from "./OrderTable";
 
 const orderStatus = [
-  {label: "Pending", value: "PENDING"},
-  {label: "Completed", value: "COMPLETED"},
-  {label: "All", value: "ALL"},
+  { label: "All", value: "ALL" },
+  { label: "Pending", value: "PENDING" },
+  { label: "Completed", value: "COMPLETED" },
+  { label: "Out For Delivery", value: "OUT_FOR_DELIVERY" },
+  { label: "Delivered", value: "DELIVERED" },
+
 ]
 
 export const Orders = () => {
-  const [filterValue, setFilterValue] = useState();
+  const [filterValue, setFilterValue] = useState("ALL");
 
   const handleFilter = (e, value) => {
     setFilterValue(value);
@@ -21,15 +24,26 @@ export const Orders = () => {
         <Typography sx={{paddingBottom: "1rem"}} variant='h5'>
           Order Status
         </Typography>
-        <FormControl>
-          <RadioGroup onChange={handleFilter} row name='category' value={filterValue || "all"}>
-            {orderStatus.map((item) => <FormControlLabel key={item.label} value={item.value}
-                                                         control={<Radio/>} label={item.label}
-                                                         sx={{color: "gray"}}/>)}
+        <FormControl >
+          <RadioGroup row onChange={handleFilter}
+
+            value={filterValue}>
+
+            {
+              orderStatus.map((item) =>
+                <FormControlLabel
+                  key={item.label}
+                  value={item.value}
+                  control={<Radio />}
+                  label={item.label}
+                  sx={{ color: "gray" }}
+                />
+              )
+            }
           </RadioGroup>
         </FormControl>
       </Card>
-      <OrderTable />
+      <OrderTable status={filterValue}/>
     </div>
   )
 }

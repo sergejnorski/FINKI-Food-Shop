@@ -35,3 +35,4 @@ export const EventCard = () =>{
         </div>
     )
 }
+export default EventCard

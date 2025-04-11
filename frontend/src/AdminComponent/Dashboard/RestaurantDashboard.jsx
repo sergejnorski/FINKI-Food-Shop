@@ -5,12 +5,12 @@ import { OrderTable } from "../Orders/OrderTable"
 export const RestaurantDashboard = () => {
   return (
     <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12} lg={6}>
+      <Grid container >
+        <Grid item xs={12} lg={12}>
         <MenuTable/>
         </Grid>
-        <Grid item xs={12} lg={6}>
-        <OrderTable/>
+        <Grid item xs={12} lg={12}>
+        <OrderTable status={"ALL"}/>
         </Grid>
       </Grid>
     </div>

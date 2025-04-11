@@ -2,6 +2,7 @@ import { AddPhotoAlternate } from "@mui/icons-material";
 import {
     Box,
     Button,
+    FormHelperText,
     Chip,
     CircularProgress,
     FormControl,
@@ -21,31 +22,52 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createMenuItem } from "../../State/Menu/Action";
 import { useEffect } from 'react';
 import { getIngredientsOfRestaurant, updateStockOfIngredient } from "../../State/Ingredients/Action";
+import Swal from 'sweetalert2';
+import * as Yup from 'yup';
+import { useNavigate } from "react-router-dom";
 const initialValues = {
-    name:"",
-    description:"",
-    price:"",
-    category:"",
-    restaurantId:"",
-    vegetarian:true,
-    seasonal:false,
-    ingredients:[],
-    images:[]
+    name: "",
+    description: "",    
+    price:null,
+    category: null,
+    restaurantId: "",
+    vegetarian: true,
+    seasonal: false,
+    ingredients: [],
+    images: []
 };
+
+const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().required("Description is required"),
+    price: Yup.number().required("Price is required"),
+    category: Yup.object().required("Category is required"),
+    ingredients: Yup.array().required("Ingredients are required"),
+});
+
+
 
 const CreateMenuForm = () => {
     const dispatch=useDispatch();
-  const jwt=localStorage.getItem("jwt");
-  const {restaurant, ingredients} = useSelector((store)=>store);
+    const jwt=localStorage.getItem("jwt");
+    const {restaurant, ingredient} = useSelector(store=>store);
+    const navigate=useNavigate();
+
     const [uploadImage,setUploadImage] = React.useState(false);
     const formik = useFormik({
         initialValues,
+        validationSchema,
         onSubmit: (values) => {
-            values.restaurantId = 2
+            values.restaurantId = restaurant.usersRestaurant.id;
             dispatch(createMenuItem({menu:values,jwt}))
-            console.log("data ---",values);
+            navigate('/admin/restaurants/menu')
         },
     });
+
+    const handleIngredientChange = (event) => {
+        const { value } = event.target;
+        formik.setFieldValue('ingredients', typeof value === 'string' ? value.split(',') : value);
+    };
     const handleImageChange= async(e) => {
         const  file = e.target.files[0];
         setUploadImage(true)
@@ -60,9 +82,25 @@ const CreateMenuForm = () => {
         updateImage.splice(index, 1);
         formik.setFieldValue("images", updateImage)
     };
-     useEffect(()=>{
-        dispatch(getIngredientsOfRestaurant({jwt,id:restaurant.usersRestaurant.id}));
-      },[]);
+    useEffect(() => {
+        
+        
+        if (restaurant?.usersRestaurant?.id) {
+            dispatch(getIngredientsOfRestaurant({
+                id: restaurant.usersRestaurant.id,
+                jwt
+            }));
+        }
+        
+        if(restaurant?.categories?.length<0){
+            Swal.fire({
+                title: "Resturant category empty",
+               
+                icon: "question"
+              });
+            navigate('/admin/restaurants/category');
+        }
+    }, [dispatch, jwt, restaurant?.usersRestaurant?.id]);
 
     return (
         <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
@@ -74,11 +112,12 @@ const CreateMenuForm = () => {
                     <Grid container spacing={2}>
                         <Grid className='flex flex-wrap gap-5' item xs={12}>
                             <input
-                                accept='image/*'
+                               type='file'
+                                name='image'
                                 id='fileInput'
-                                style={{display: "none"}}
+                                style={{ display: "none" }}
                                 onChange={handleImageChange}
-                                type="file"/>
+                                accept='image/*'/>
 
                             <label className='relative' htmlFor='fileInput'>
                   <span className='w-24 h-24 cursor-pointer flex items-center justify-center
@@ -93,11 +132,11 @@ const CreateMenuForm = () => {
                                     )}
                             </label>
                             <div className='flex flex-wrap gap-2'>
-                                {formik.values.images.map((image, index) => (
-                                    <div className="relative">
+                                {formik.values?.images?.map((image, index) => (
+                                    <div key={index} className="relative">
                                         <img
                                             className='w-24 h-24 object-cover'
-                                            key={index}
+                                            
                                             src={image}
                                             alt=""
                                         />
@@ -117,120 +156,152 @@ const CreateMenuForm = () => {
                             </div>
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField fullWidth
-                                       id="name"
-                                       name="name"
-                                       label="Name"
-                                       variant="outlined"
-                                       onChange={formik.handleChange}
-                                       value={formik.values.name}>
+                            <TextField 
+                                        fullWidth
+                                        id='name'
+                                        name='name'
+                                        label='Name'
+                                        variant='outlined'
+                                        value={formik.values.name}
+                                        onChange={formik.handleChange}
+                                        error={formik.touched.name && Boolean(formik.errors.name)}
+                                        helperText={formik.touched.name && formik.errors.name}>
                             </TextField>
                         </Grid>
                         <Grid item xs={12}>
                             <TextField fullWidth
-                                       id="description"
-                                       name="description"
-                                       label="Description"
-                                       variant="outlined"
-                                       onChange={formik.handleChange}
-                                       value={formik.values.description}>
+                                id='description'
+                                name='description'
+                                label='Description'
+                                variant='outlined'
+                                value={formik.values.description}
+                                onChange={formik.handleChange}
+                                error={formik.touched.description && Boolean(formik.errors.description)}
+                                helperText={formik.touched.description && formik.errors.description}>
                             </TextField>
                         </Grid>
                         <Grid item xs={12} lg={6}>
                             <TextField fullWidth
-                                       id="price"
-                                       name="price"
-                                       label="Price"
-                                       variant="outlined"
-                                       onChange={formik.handleChange}
-                                       value={formik.values.price}>
+                                id='price'
+                                name='price'
+                                label='Price'
+                                variant='outlined'
+                                value={formik.values.price}
+                                onChange={formik.handleChange}
+                                error={formik.touched.price && Boolean(formik.errors.price)}
+                                helperText={formik.touched.price && formik.errors.price}>
                             </TextField>
                         </Grid>
 
-                        <Grid item xs={12} lg={6}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Category</InputLabel>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth variant="outlined" error={formik.touched.category && Boolean(formik.errors.category)}>
+                                <InputLabel id="category-label">Category</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={formik.values.category}
-                                    label="Category"
-                                    onChange={formik.handleChange}
+                                    labelId="category-label"
+                                    id="category"
                                     name="category"
+                                    value={formik.values.category}
+                                    onChange={formik.handleChange}
+                                    label="Category"
                                 >
-                                    {restaurant.categories?.map((item)=><MenuItem value={item}>{item.name}</MenuItem>)}
-                                    
+                                    {restaurant?.categories?.map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option.name}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
+                                {formik.touched.category && formik.errors.category && (
+                                    <FormHelperText>{formik.errors.category}</FormHelperText>
+                                )}
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12}>
+                        <Grid item sm={12}>
                             <FormControl fullWidth>
                                 <InputLabel id="demo-multiple-chip-label">Ingredients</InputLabel>
                                 <Select
                                     labelId="demo-multiple-chip-label"
                                     id="demo-multiple-chip"
-                                    name = "ingredients"
                                     multiple
                                     value={formik.values.ingredients}
-                                    onChange={formik.handleChange}
+                                    onChange={handleIngredientChange}
                                     input={<OutlinedInput id="select-multiple-chip" label="Ingredients" />}
                                     renderValue={(selected) => (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                                             {selected.map((value) => (
-                                                <Chip key={value.id} label={value.name} />
+                                                <Chip key={value} label={value.name} />
                                             ))}
                                         </Box>
                                     )}
                                 >
-                                    {ingredients.ingredients?.map((item,index) => (
-                                        <MenuItem
-                                            key={item.id}
-                                            value={item}
-                                        >
+                                    {ingredient?.ingredients?.map((item) => (
+                                        <MenuItem key={item.id} value={item}>
                                             {item.name}
                                         </MenuItem>
                                     ))}
                                 </Select>
+                                {formik.touched.ingredients && formik.errors.ingredients && (
+                                    <FormHelperText>{formik.errors.ingredients}</FormHelperText>
+                                )}
                             </FormControl>
                         </Grid>
 
-                        <Grid item xs={12} lg={6}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Is Vegetarian</InputLabel>
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth variant="outlined" error={formik.touched.vegetarian && Boolean(formik.errors.vegetarian)}>
+                                <InputLabel id="is-veg">Is Vegetarian</InputLabel>
                                 <Select
-                                    labelId="demo-simple-select-label"
+                                    labelId="is-veg"
                                     id="vegetarian"
-                                    value={formik.values.vegetarian}
-                                    label="Is Vegetarian"
-                                    onChange={formik.handleChange}
                                     name="vegetarian"
-                                >
-                                    <MenuItem value={true}>Yes</MenuItem>
-                                    <MenuItem value={false}>No</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Grid>
-
-                        <Grid item xs={12} lg={6}>
-                            <FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Is Seasonal</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="seasonal"
-                                    value={formik.values.seasonal}
-                                    label="Is Seasonal"
+                                    value={formik.values.vegetarian}
                                     onChange={formik.handleChange}
-                                    name="seasonal"
+                                    label="Is Vegetarian"
                                 >
-                                    <MenuItem value={true}>Yes</MenuItem>
-                                    <MenuItem value={false}>No</MenuItem>
+                                    {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
                                 </Select>
+                                {formik.touched.vegetarian && formik.errors.vegetarian && (
+                                    <FormHelperText>{formik.errors.vegetarian}</FormHelperText>
+                                )}
                             </FormControl>
                         </Grid>
 
+                        <Grid item xs={12} sm={6}>
+                            <FormControl fullWidth variant="outlined" error={formik.touched.seasonal && Boolean(formik.errors.seasonal)}>
+                                <InputLabel id="is-seasonal">Is Seasonal</InputLabel>
+                                <Select
+                                    labelId="is-seasonal"
+                                    id="seasonal"
+                                    name="seasonal"
+                                    value={formik.values.seasonal}
+                                    onChange={formik.handleChange}
+                                    label="Is Seasonal"
+                                >
+                                    {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                                {formik.touched.seasonal && formik.errors.seasonal && (
+                                    <FormHelperText>{formik.errors.seasonal}</FormHelperText>
+                                )}
+                            </FormControl>
+                        </Grid>
+                        <Grid item sm={6}>
+                            <Button
+                                color='primary'
+                                variant='contained'
+                                fullWidth
+                                type='submit'
+                            >
+                                Submit
+                            </Button>
+                        </Grid>
                     </Grid>
-                    <Button variant="contained" color="primary" type="submit">Create Menu</Button>
                 </form>
             </div>
         </div>

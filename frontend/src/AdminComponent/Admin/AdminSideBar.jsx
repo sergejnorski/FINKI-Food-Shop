@@ -41,16 +41,20 @@ export const AdminSideBar = ({handleClose}) => {
   return (
     <div>
       <>
-        <Drawer variant={isSmallScreen ? "temporary" : 'permanent'} onClose={handleClose} open={true} anchor='left'
-                sx={{zIndex: 1}}>
+        <Drawer
+          variant={isSmallScreen ? "temporary" : 'permanent'} onClose={handleClose}
+          open={true}
+          anchor='left'
+          sx={{zIndex: 10}}>
           <div className='w-[70vw] lg:w-[20vw] h-screen flex flex-col justify-center text-xl space-y-[1.65rem]'>
-            {menu.map((item, i) =>
+            {
+              menu.map((item, i) =>
               <>
                 <div className='px-5 flex items-center gap-5 cursor-pointer' onClick={() => handleNavigate(item)}>
                   {item.icon}
                   <span>{item.title}</span>
                 </div>
-                {i !== menu.length - 1 && <Divider/>}
+                {i !== (menu.length - 1) && <Divider/>}
               </>
             )}
           </div>

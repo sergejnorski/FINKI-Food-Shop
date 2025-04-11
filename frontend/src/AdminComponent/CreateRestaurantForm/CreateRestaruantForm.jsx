@@ -9,271 +9,316 @@ import {
 import { useFormik } from "formik";
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
-import {uploadImageToCloudinary} from "../util/UploadtoCloudaniry";
-import {useDispatch} from "react-redux";
-import {createRestaurant} from "../../State/Restaurant/Action";
-
+import { uploadImageToCloudinary } from "../util/UploadtoCloudaniry";
+import { useDispatch, useSelector } from "react-redux";
+import { createRestaurant } from "../../State/Restaurant/Action";
+import * as Yup from 'yup';
 const initialValues = {
-    name:"",
-    description:"",
-    cuisineType:"",
-    streetAddress:"",
-    city:"",
-    stateProvince:"",
-    postalCode:"",
-    country:"",
-    mobile:"",
-    twitter:"",
-    instagram:"",
-    openingHours:"Mon-Sun : 9:00 AM - 12:00 PM",
-    images:[]
+    name: "",
+    description: "",
+    cuisineType: "",
+    streetAddress: "",
+    city: "",
+    stateProvince: "",
+    postalCode: "",
+    country: "",
+    mobile: "",
+    twitter: "",
+    instagram: "",
+    email: "",
+    openingHours: "",
+    images: []
 }
+const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+    description: Yup.string().required("Description is required"),
+    cuisineType: Yup.string().required("Cuisine type is required"),
+    streetAddress: Yup.string().required("Street address is required"),
+    city: Yup.string().required("City is required"),
+    stateProvince: Yup.string().required("State/Province is required"),
+    postalCode: Yup.string().required("Postal code is required"),
+    country: Yup.string().required("Country is required"),
+    email: Yup.string().email("Invalid email format").required("Email is required"),
+    mobile: Yup.number().required("Mobile number is required"),
+    twitter: Yup.string().url("Invalid URL format"),
+    instagram: Yup.string().url("Invalid URL format"),
+    openingHours: Yup.string().required("Opening hours are required")
+});
 const CreateRestaurantForm = () => {
-  const [uploadImage,setUploadImage] = React.useState(false);
-  const dispatch=useDispatch();
-  const jwt=localStorage.getItem('jwt');
-  const formik = useFormik({
-      initialValues,
-      onSubmit: (values) => {
-        const data={
-            name:values.name,
-            description:values.description,
-            cuisineType:values.cuisineType,
-            address:{
-                streetAddress:values.streetAddress,
-                city:values.city,
-                stateProvince:values.stateProvince,
-                postalCode:values.postalCode,
-                country:values.country
-            },
+    const [uploadImage, setUploadImage] = React.useState(false);
+    const dispatch = useDispatch();
+    const jwt = localStorage.getItem('jwt');
 
-            contactInformation:{
-                email:values.email,
-                mobile:values.mobile,
-                twitter:values.twitter,
-                instagram:values.instagram,
-            },
-            openingHours:values.openingHours,
-            images:values.images,
-        };
-        console.log("data ---", data);
+    const { auth } = useSelector(store => store);
 
-        dispatch(createRestaurant({data, token: jwt}))
-      },
-  });
-  const handleImageChange= async(e) => {
-      const  file = e.target.files[0];
-      setUploadImage(true)
-      const image = await uploadImageToCloudinary(file)
-      console.log("image ---",image)
-      formik.setFieldValue("images", [...formik.values.images,image])
-      setUploadImage(false)
-  };
+    const formik = useFormik({
+        initialValues,
+        validationSchema, // napravi validacija na site
+        onSubmit: (values) => {
+            const data = {
+                name: values.name,
+                description: values.description,
+                cuisineType: values.cuisineType,
+                address: {
+                    streetAddress: values.streetAddress,
+                    city: values.city,
+                    stateProvince: values.stateProvince,
+                    postalCode: values.postalCode,
+                    country: values.country
+                },
 
-  const handleRemoveImage=(index) => {
-      const updateImage = [...formik.values.images];
-      updateImage.splice(index, 1);
-      formik.setFieldValue("images", updateImage)
-  };
+                contactInformation: {
+                    email: values.email,
+                    mobile: values.mobile,
+                    twitter: values.twitter,
+                    instagram: values.instagram,
+                },
+                openingHours: values.openingHours,
+                images: values.images,
+            };
+            console.log("data ---", data);
+            console.log(jwt);
+            dispatch(createRestaurant({ data, token: jwt }));
+        }
+    });
 
-  return (
-    <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
+
+
+    const handleImageChange = async (e) => {
+        const file = e.target.files[0];
+        setUploadImage(true);
+        const image = await uploadImageToCloudinary(file)
+        console.log("image ---", image)
+        formik.setFieldValue("images", [...formik.values.images, image])
+        setUploadImage(false)
+    };
+
+    const handleRemoveImage = (index) => {
+        const updateImage = [...formik.values.images];
+        updateImage.splice(index, 1);
+        formik.setFieldValue("images", updateImage)
+    };
+
+    return (
+        <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
             <div className="lg:max-w-4x1">
-            <h1 className='font-bold text-2xl text-center py-2'>
-                Add New Restaurant
-            </h1>
-            <form onSubmit={formik.handleSubmit} className='space-y-4'>
-                <Grid container spacing={2}>
-                    <Grid className='flex flex-wrap gap-5' item xs={12}>
-                        <input
-                            accept='image/*'
-                            id='fileInput'
-                            style={{display: "none"}}
-                            onChange={handleImageChange}
-                            type="file"/>
+                <h1 className='font-bold text-2xl text-center py-2'>
+                    Add New Restaurant
+                </h1>
+                <form onSubmit={formik.handleSubmit} className='space-y-4'>
+                    <Grid container spacing={2}>
+                        <Grid className='flex flex-wrap gap-5' item xs={12}>
+                            <input
+                                name='image'
+                                accept='image/*'
+                                id='fileInput'
+                                style={{ display: "none" }}
+                                onChange={handleImageChange}
+                                type="file" />
 
-                        <label className='relative' htmlFor='fileInput'>
-                  <span className='w-24 h-24 cursor-pointer flex items-center justify-center
+                            <label className='relative' htmlFor='fileInput'>
+                                <span className='w-24 h-24 cursor-pointer flex items-center justify-center
                    p-3 border rounded-md border-gray-600'>
-                      <AddPhotoAlternate className="text-white"/>
-                  </span>
-                            {uploadImage &&
-                                (<div className='absolute left-0 right-0 top-0
+                                    <AddPhotoAlternate className="text-white" />
+                                </span>
+                                {uploadImage &&
+                                    (<div className='absolute left-0 right-0 top-0
                        bottom-0 w-24 h-24 flex justify-center items-center'>
-                                        <CircularProgress/>
+                                        <CircularProgress />
                                     </div>
-                                )}
-                        </label>
-                        <div className='flex flex-wrap gap-2'>
-                            {formik.values.images.map((image, index) => (
-                                <div className="relative">
-                                    <img
-                                        className='w-24 h-24 object-cover'
-                                        key={index}
-                                        src={image}
-                                        alt=""
-                                    />
-                                    <IconButton
-                                        size="small"
-                                        sx={{
-                                            position: 'absolute',
-                                            top: 0,
-                                            right: 0,
-                                            outline: 'none',
-                                        }}
-                                        onClick={() => handleRemoveImage(index)}>
-                                        <CloseIcon sx={{fontSize:"1rem"}}/>
-                                    </IconButton>
-                                </div>
-                            ))}
-                        </div>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField fullWidth
-                        id="name"
-                        name="name"
-                        label="Name"
-                        variant="outlined"
-                        onChange={formik.handleChange}
-                        value={formik.values.name}>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField fullWidth
-                                   id="description"
-                                   name="description"
-                                   label="Description"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.description}>
-                        </TextField>
-                    </Grid>
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="cuisineType"
-                                   name="cuisineType"
-                                   label="Cuisine Type"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.cuisineType}>
-                        </TextField>
-                    </Grid>
+                                    )}
+                            </label>
+                            <div className='flex flex-wrap gap-2'>
+                                {formik.values?.images?.map((image, index) => (
+                                    <div key={index} className="relative">
+                                        <img
+                                            className='w-24 h-24 object-cover'
 
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="openingHours"
-                                   name="openingHours"
-                                   label="Opening Hours"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.openingHours}>
-                        </TextField>
-                    </Grid>
+                                            src={image}
+                                            alt=""
+                                        />
+                                        <IconButton
+                                            size="small"
+                                            sx={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 0,
+                                                outline: 'none',
+                                            }}
+                                            onClick={() => handleRemoveImage(index)}>
+                                            <CloseIcon sx={{ fontSize: "1rem" }} />
+                                        </IconButton>
+                                    </div>
+                                ))}
+                            </div>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField fullWidth
-                                   id="streetAddress"
-                                   name="streetAddress"
-                                   label="Street Address"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.streetAddress}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                id="name"
+                                name="name"
+                                label="Name"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.name}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12}>
-                        <TextField fullWidth
-                                   id="city"
-                                   name="city"
-                                   label="City"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.city}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                id="description"
+                                name="description"
+                                label="Description"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.description}>
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                id="cuisineType"
+                                name="cuisineType"
+                                label="Cuisine Type"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.cuisineType}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={4}>
-                        <TextField fullWidth
-                                   id="stateProvince"
-                                   name="stateProvince"
-                                   label="State"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.stateProvince}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                id="openingHours"
+                                name="openingHours"
+                                label="Opening Hours"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.openingHours}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={4}>
-                        <TextField fullWidth
-                                   id="postalCode"
-                                   name="postalCode"
-                                   label="Postal Code"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.postalCode}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth
+                                id="streetAddress"
+                                name="streetAddress"
+                                label="Street Address"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.streetAddress}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={4}>
-                        <TextField fullWidth
-                                   id="country"
-                                   name="country"
-                                   label="Country"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.country}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField fullWidth
+                                id="city"
+                                name="city"
+                                label="City"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.city}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="email"
-                                   name="email"
-                                   label="Email"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.email}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} lg={4}>
+                            <TextField fullWidth
+                                id="stateProvince"
+                                name="stateProvince"
+                                label="State/Province"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.stateProvince}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="mobile"
-                                   name="mobile"
-                                   label="Mobile"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.mobile}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12} sm={4}>
+                            <TextField fullWidth
+                                id="postalCode"
+                                name="postalCode"
+                                label="Postal Code"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.postalCode}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="instagram"
-                                   name="instagram"
-                                   label="Instagram"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.instagram}>
-                        </TextField>
-                    </Grid>
+                        <Grid item xs={12}>
+                            <TextField fullWidth
+                                id="country"
+                                name="country"
+                                label="Country"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.country}>
+                            </TextField>
+                        </Grid>
 
-                    <Grid item xs={12} lg={6}>
-                        <TextField fullWidth
-                                   id="twitter"
-                                   name="twitter"
-                                   label="Twitter"
-                                   variant="outlined"
-                                   onChange={formik.handleChange}
-                                   value={formik.values.twitter}>
-                        </TextField>
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth
+                                id="email"
+                                name="email"
+                                label="Email"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.email}>
+                            </TextField>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth
+                                id="mobile"
+                                name="mobile"
+                                label="Mobile"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.mobile}>
+                            </TextField>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth
+                                id="instagram"
+                                name="instagram"
+                                label="Instagram"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.instagram}>
+                            </TextField>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField fullWidth
+                                id="twitter"
+                                name="twitter"
+                                label="Twitter"
+                                variant="outlined"
+                                onChange={formik.handleChange}
+                                value={formik.values.twitter}>
+                            </TextField>
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                id='openingHours'
+                                name='openingHours'
+                                label='Opening Hours'
+                                variant='outlined'
+                                value={formik.values.openingHours}
+                                onChange={formik.handleChange}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <Button type='submit' variant='contained' color='primary'>
+                                Create Restaurant
+                            </Button>
+                        </Grid>
                     </Grid>
-                </Grid>
-                <Button variant="contained" color="primary" type="submit">Create Restaurant</Button>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
-  );
+    );
 };
 
 export default CreateRestaurantForm;
