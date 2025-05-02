@@ -33,12 +33,12 @@ public class FoodServiceImp implements FoodService {
         food.setFoodCategory(category);
         food.setRestaurant(restaurant);
         food.setDescription(req.getDescription());
-        food.setImages(req.getImage());
+        food.setImages(req.getImages());
         food.setName(req.getName());
         food.setPrice(req.getPrice());
         food.setIngredients(req.getIngredients());
-        food.setSeasonal(req.isSeasional());
-        food.setVegetarian(req.isVegetarin());
+        food.setSeasonal(req.isSeasonal());
+        food.setVegetarian(req.isVegetarian());
         food.setCreationDate(new Date());
         food.setAvailable(true);
 

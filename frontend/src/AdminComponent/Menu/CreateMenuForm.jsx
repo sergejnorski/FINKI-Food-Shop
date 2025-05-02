@@ -15,13 +15,13 @@ import {
     MenuItem,
 } from '@mui/material';
 import { useFormik } from "formik";
-import React, { useState } from 'react';
+import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import {uploadImageToCloudinary} from "../util/UploadtoCloudaniry";
 import { useDispatch, useSelector } from 'react-redux';
 import { createMenuItem } from "../../State/Menu/Action";
 import { useEffect } from 'react';
-import { getIngredientsOfRestaurant, updateStockOfIngredient } from "../../State/Ingredients/Action";
+import { getIngredientsOfRestaurant } from "../../State/Ingredients/Action";
 import Swal from 'sweetalert2';
 import * as Yup from 'yup';
 import { useNavigate } from "react-router-dom";
@@ -50,7 +50,7 @@ const validationSchema = Yup.object({
 const CreateMenuForm = () => {
     const dispatch=useDispatch();
     const jwt=localStorage.getItem("jwt");
-    const {restaurant, ingredient} = useSelector(store=>store);
+    const {restaurant, ingredients} = useSelector(store=>store);
     const navigate=useNavigate();
 
     const [uploadImage,setUploadImage] = React.useState(false);
@@ -73,7 +73,7 @@ const CreateMenuForm = () => {
         setUploadImage(true)
         const image = await uploadImageToCloudinary(file)
         console.log("image ---",image)
-        formik.setFieldValue("images", [...formik.values.images,image])
+        await formik.setFieldValue("images", [...formik.values.images, image])
         setUploadImage(false)
     };
 
@@ -234,7 +234,7 @@ const CreateMenuForm = () => {
                                         </Box>
                                     )}
                                 >
-                                    {ingredient?.ingredients?.map((item) => (
+                                    {ingredients?.ingredients?.map((item) => (
                                         <MenuItem key={item.id} value={item}>
                                             {item.name}
                                         </MenuItem>
@@ -250,19 +250,20 @@ const CreateMenuForm = () => {
                             <FormControl fullWidth variant="outlined" error={formik.touched.vegetarian && Boolean(formik.errors.vegetarian)}>
                                 <InputLabel id="is-veg">Is Vegetarian</InputLabel>
                                 <Select
-                                    labelId="is-veg"
-                                    id="vegetarian"
-                                    name="vegetarian"
-                                    value={formik.values.vegetarian}
-                                    onChange={formik.handleChange}
-                                    label="Is Vegetarian"
+                                  labelId="is-veg"
+                                  id="vegetarian"
+                                  name="vegetarian"
+                                  value={formik.values.vegetarian}
+                                  onChange={(e) => formik.setFieldValue("vegetarian", e.target.value === "true")}
+                                  label="Is Vegetarian"
                                 >
                                     {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
+                                      <MenuItem key={option.value.toString()} value={option.value.toString()}>
+                                          {option.label}
+                                      </MenuItem>
                                     ))}
                                 </Select>
+
                                 {formik.touched.vegetarian && formik.errors.vegetarian && (
                                     <FormHelperText>{formik.errors.vegetarian}</FormHelperText>
                                 )}
@@ -273,19 +274,20 @@ const CreateMenuForm = () => {
                             <FormControl fullWidth variant="outlined" error={formik.touched.seasonal && Boolean(formik.errors.seasonal)}>
                                 <InputLabel id="is-seasonal">Is Seasonal</InputLabel>
                                 <Select
-                                    labelId="is-seasonal"
-                                    id="seasonal"
-                                    name="seasonal"
-                                    value={formik.values.seasonal}
-                                    onChange={formik.handleChange}
-                                    label="Is Seasonal"
+                                  labelId="is-seasonal"
+                                  id="seasonal"
+                                  name="seasonal"
+                                  value={formik.values.seasonal}
+                                  onChange={(e) => formik.setFieldValue("seasonal", e.target.value === "true")}
+                                  label="Is Seasonal"
                                 >
                                     {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
-                                        <MenuItem key={option.value} value={option.value}>
-                                            {option.label}
-                                        </MenuItem>
+                                      <MenuItem key={option.value.toString()} value={option.value.toString()}>
+                                          {option.label}
+                                      </MenuItem>
                                     ))}
                                 </Select>
+
                                 {formik.touched.seasonal && formik.errors.seasonal && (
                                     <FormHelperText>{formik.errors.seasonal}</FormHelperText>
                                 )}

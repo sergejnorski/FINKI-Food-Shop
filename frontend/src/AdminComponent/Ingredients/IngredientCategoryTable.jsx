@@ -24,12 +24,11 @@ export const IngredientCategoryTable = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const dispatch = useDispatch();
-  const {restaurant, ingredient} = useSelector(store=>store)
+  const {restaurant, ingredients} = useSelector(store=>store)
   const jwt=localStorage.getItem("jwt");
 
   useEffect(() => {
     dispatch(getIngredientCategory({id: restaurant?.usersRestaurant.id, jwt}))
-
   }, [])
 
   const style = {
@@ -44,11 +43,12 @@ export const IngredientCategoryTable = () => {
     p: 4,
   };
 
+  console.log(ingredients.ingredients)
   return (
     <Box>
       <Card className='mt-1'>
       <CardHeader
-                    title={"Ingredient Category"}
+                    title={"Категорија за состојки"}
                     sx={{ pt: 2, alignItems: "center" }}
                     action={
                         <IconButton onClick={handleOpen}>
@@ -62,12 +62,12 @@ export const IngredientCategoryTable = () => {
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Image</TableCell>
-                <TableCell align="left">Title</TableCell>
+                <TableCell align="left">Број</TableCell>
+                <TableCell align="left">Име на категорија</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {ingredient?.category?.map((item) => (
+              {ingredients?.category?.map((item) => (
                 <TableRow
                   key={item.id}
                   sx={{'&:last-child td, &:last-child th': {border: 0}}}

@@ -22,7 +22,7 @@ export const Orders = () => {
     <div className="px-2">
       <Card className='p-5'>
         <Typography sx={{paddingBottom: "1rem"}} variant='h5'>
-          Order Status
+          Статус на нарачки
         </Typography>
         <FormControl >
           <RadioGroup row onChange={handleFilter}

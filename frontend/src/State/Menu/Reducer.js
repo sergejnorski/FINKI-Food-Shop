@@ -12,6 +12,7 @@ export const menuItemReducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.CREATE_MENU_ITEM_REQUEST:
     case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST:
+    case actionTypes.GET_ALL_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST:
     case actionTypes.DELETE_MENU_ITEM_REQUEST:
     case actionTypes.SEARCH_MENU_ITEM_REQUEST:
     case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_REQUEST:
@@ -26,6 +27,7 @@ export const menuItemReducer = (state = initialState, action) => {
         message: "Food Created Successfully"
       };
     case actionTypes.GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS:
+    case actionTypes.GET_ALL_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS:
       return {...state, loading: false, menuItems: action.payload};
     case actionTypes.DELETE_MENU_ITEM_SUCCESS:
       return {
@@ -46,6 +48,7 @@ export const menuItemReducer = (state = initialState, action) => {
     case actionTypes.DELETE_MENU_ITEM_FAILURE:
     case actionTypes.SEARCH_MENU_ITEM_FAILURE:
     case actionTypes.UPDATE_MENU_ITEMS_AVAILABILITY_FAILURE:
+    case actionTypes.GET_ALL_MENU_ITEMS_BY_RESTAURANT_ID_FAILURE:
       return {
         ...state, loading: false, error: action.payload, message: null
       };

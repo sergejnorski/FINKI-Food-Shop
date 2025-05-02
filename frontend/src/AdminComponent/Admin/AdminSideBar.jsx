@@ -14,14 +14,14 @@ import {useDispatch} from "react-redux";
 import {logout} from "../../State/Authentication/Action";
 
 const menu = [
-  {title: "Dashboard", icon: <Dashboard/>, path: "/"},
-  {title: "Orders", icon: <ShoppingBag/>, path: "/orders"},
-  {title: "Menu", icon: <ShopTwo/>, path: "/menu"},
-  {title: "Food Category", icon: <Category/>, path: "/category"},
-  {title: "Ingredients", icon: <Fastfood/>, path: "/ingredients"},
-  {title: "Events", icon: <Event/>, path: "/event"},
-  {title: "Details", icon: <AdminPanelSettings/>, path: "/details"},
-  {title: "Logout", icon: <Logout/>, path: "/"},
+  {title: "Почетна", icon: <Dashboard/>, path: "/"},
+  {title: "Нарачки", icon: <ShoppingBag/>, path: "/orders"},
+  {title: "Продукти", icon: <ShopTwo/>, path: "/menu"},
+  {title: "Категории", icon: <Category/>, path: "/category"},
+  {title: "Состојки", icon: <Fastfood/>, path: "/ingredients"},
+  // {title: "Настани", icon: <Event/>, path: "/event"},
+  {title: "Детали", icon: <AdminPanelSettings/>, path: "/details"},
+  {title: "Одјава", icon: <Logout/>, path: "/"},
 ]
 
 export const AdminSideBar = ({handleClose}) => {
@@ -31,9 +31,11 @@ export const AdminSideBar = ({handleClose}) => {
   const dispatch = useDispatch();
   const handleNavigate = (item) => {
     navigate(`/admin/restaurants${item.path}`);
-    if (item.title === "Logout") {
+    if (item.title === "Одјава") {
       navigate("/");
       dispatch(logout());
+      console.log('logout')
+      localStorage.removeItem("jwt")
       handleClose();
     }
   }

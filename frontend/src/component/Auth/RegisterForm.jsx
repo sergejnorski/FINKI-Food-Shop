@@ -20,13 +20,13 @@ export const RegisterForm = () => {
     return (
         <div>
             <Typography variant='h5' className='text-center'>
-                Register
+                Регистрација
             </Typography>
             <Formik onSubmit={handleSubmit} initialValues={initialValues}>
                 <Form >
                     <Field as={TextField}
                         name="fullName"
-                        label="full name"
+                        label="Целосно име"
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -35,7 +35,7 @@ export const RegisterForm = () => {
 
                     <Field as={TextField}
                         name="email"
-                        label="email"
+                        label="е-пошта"
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -43,7 +43,7 @@ export const RegisterForm = () => {
                     />
                     <Field as={TextField}
                         name="password"
-                        label="password"
+                        label="лозинка"
                         fullWidth
                         variant="outlined"
                         margin="normal"
@@ -60,18 +60,18 @@ export const RegisterForm = () => {
                             name="role"
                         
                         >
-                            <MenuItem value={"ROLE_CUSTOMER"}>Customer</MenuItem>
-                            <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Restaurant Owner</MenuItem>
+                            <MenuItem value={"ROLE_CUSTOMER"}>Корисник</MenuItem>
+                            <MenuItem value={"ROLE_RESTAURANT_OWNER"}>Газда на маркет</MenuItem>
                         </Field>
                     
-                    <Button sx={{ mt: 2, padding: "1rem" }} fullWidth type="submit" variant='contained'>Register</Button>
+                    <Button sx={{ mt: 2, padding: "1rem" }} fullWidth type="submit" variant='contained'>Регистрација</Button>
 
                 </Form>
             </Formik>
             <Typography variant='body2' align='center' sx={{ mt: 3 }}>
-                If you have an account already
+                Доколку имате корисничка сметка
                 <Button size='small' onClick={() => navigate("/account/login")}>
-                    Login
+                    Најава
                 </Button>
             </Typography>
         </div>

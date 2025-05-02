@@ -1,4 +1,6 @@
 import {
+  ADD_ADDRESS_FAILURE,
+  ADD_ADDRESS_REQUEST, ADD_ADDRESS_SUCCESS,
   ADD_TO_FAVORITE_FAILURE,
   ADD_TO_FAVORITE_REQUEST, ADD_TO_FAVORITE_SUCCESS, GET_USER_FAILURE,
   GET_USER_REQUEST, GET_USER_SUCCESS, LOGIN_FAILURE,
@@ -16,7 +18,7 @@ export const registerUser = (reqData) => async (dispatch) => {
     const {data} = await axios.post(`${API_URL}/auth/signup`, reqData.userData);
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
     if (data.role === "ROLE_RESTAURANT_OWNER") {
-      reqData.navigate("/admin/restaurant");
+      reqData.navigate("/admin/restaurants");
     } else {
       reqData.navigate("/");
     }
@@ -37,8 +39,7 @@ export const loginUser = (reqData) => async (dispatch) => {
     } else {
       reqData.navigate("/");
     }
-    dispatch({type: LOGIN_SUCCESS, payload: data.jwt});
-
+    dispatch({type: LOGIN_SUCCESS, payload: data});
   } catch (error) {
     dispatch({type: LOGIN_FAILURE, payload: error});
     console.error(error);
@@ -77,9 +78,23 @@ export const addToFavorite = ({jwt, restaurantId}) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
   try {
-    localStorage.clear();
+    localStorage.removeItem("jwt");
     dispatch({type: LOGOUT});
   } catch (error) {
     console.error(error);
   }
 }
+
+export const addAddress = (reqData) => async (dispatch) => {
+  dispatch({type: ADD_ADDRESS_REQUEST});
+  try {
+    const {data} = await api.post(`/api/users/address`, reqData.deliveryAddress, {
+      headers: {
+        Authorization: `Bearer ${reqData.jwt}`,
+      },
+    });
+    dispatch({type: ADD_ADDRESS_SUCCESS, payload: data});
+  } catch (error) {
+    dispatch({type: ADD_ADDRESS_FAILURE, payload: error});
+  }
+};

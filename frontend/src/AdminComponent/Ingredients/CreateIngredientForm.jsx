@@ -5,7 +5,7 @@ import {createIngredient, createIngredientCategory} from "../../State/Ingredient
 
 const CreateIngredientForm = ({handleClose}) => {
 
-    const {restaurant, ingredient} = useSelector(store=>store)
+    const {restaurant, ingredients} = useSelector(store=>store)
     const dispatch=useDispatch();
     const jwt=localStorage.getItem("jwt");
 
@@ -83,7 +83,7 @@ const CreateIngredientForm = ({handleClose}) => {
               onChange={handleInputChange}
               label="Category"
             >
-              {ingredient?.category?.map((option) => (
+              {ingredients?.category?.map((option) => (
                 <MenuItem key={option} value={option.id}>
                   {option.name || 'Select Category'}
                 </MenuItem>

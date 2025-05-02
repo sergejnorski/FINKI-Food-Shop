@@ -50,7 +50,7 @@ export const FoodCategoryTable = () => {
     <Box>
       <Card className='mt-1'>
       <CardHeader
-                    title={"Food Category"}
+                    title={"Категории"}
                     sx={{ pt: 2, alignItems: "center" }}
                     action={
                         <IconButton onClick={handleOpen} >
@@ -63,8 +63,8 @@ export const FoodCategoryTable = () => {
           <Table sx={{minWidth: 650}} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell align="left">Id</TableCell>
-                <TableCell align="left">Name</TableCell>
+                <TableCell align="left">Број</TableCell>
+                <TableCell align="left">Име</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

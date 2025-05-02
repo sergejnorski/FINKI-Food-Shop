@@ -7,29 +7,29 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TableRow
+  TableRow, Typography
 } from "@mui/material";
 import {Create} from "@mui/icons-material";
-import React, { useEffect } from "react";
+import React, {useEffect} from "react";
 import CreateIngredientForm from "./CreateIngredientForm";
 import {useDispatch, useSelector} from "react-redux";
-import { getIngredientsOfRestaurant, updateStockOfIngredient } from "../../State/Ingredients/Action";
+import {getIngredientsOfRestaurant, updateStockOfIngredient} from "../../State/Ingredients/Action";
 import CreateIcon from '@mui/icons-material/Create';
 
 
-export default function IngredientTable () {
+export default function IngredientTable() {
 
-  const dispatch=useDispatch();
-  const jwt=localStorage.getItem("jwt");
-  const {restaurant, ingredient} = useSelector(store=>store)
+  const dispatch = useDispatch();
+  const jwt = localStorage.getItem("jwt");
+  const {restaurant, ingredients} = useSelector(store => store)
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  useEffect(()=>{
-    dispatch(getIngredientsOfRestaurant({jwt,id:restaurant?.usersRestaurant?.id}));
-  },[]);
-  const handleUpdateStoke=(id)=>{
-    dispatch(updateStockOfIngredient({id:id,jwt}));
+  useEffect(() => {
+    dispatch(getIngredientsOfRestaurant({jwt, id: restaurant?.usersRestaurant?.id}));
+  }, []);
+  const handleUpdateStoke = (id) => {
+    dispatch(updateStockOfIngredient({id: id, jwt}));
   }
 
   const style = {
@@ -45,58 +45,57 @@ export default function IngredientTable () {
   };
 
 
-
-
   return (
     <Box>
       <Card className='mt-1'>
-      <CardHeader
-                    title={"Ingredients"}
-                    sx={{ pt: 2, alignItems: "center" }}
-                    action={
-                        <IconButton onClick={handleOpen}>
-                            <CreateIcon />
-                        </IconButton>
+        <CardHeader
+          title={"Состојки"}
+          sx={{pt: 2, alignItems: "center"}}
+          action={
+            <IconButton onClick={handleOpen}>
+              <CreateIcon/>
+            </IconButton>
 
-                    }
-                />
+          }
+        />
 
 
       </Card>
-        <TableContainer component={Paper}>
-          <Table sx={{minWidth: 650}} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Id</TableCell>
-                <TableCell align="right">Name</TableCell>
-                <TableCell align="right">Category</TableCell>
-                <TableCell align="right">Availability</TableCell>
+      <TableContainer component={Paper}>
+        <Table sx={{minWidth: 650}} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Број</TableCell>
+              <TableCell align="right">Име</TableCell>
+              <TableCell align="right">Категорија</TableCell>
+              <TableCell align="right">Достапност</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {ingredients?.ingredients?.map((item) => (
+              <TableRow
+                key={item.id}
+                sx={{'&:last-child td, &:last-child th': {border: 0}}}
+              >
+                <TableCell align="left">{item.id}</TableCell>
+                <TableCell align="right">{item.name}</TableCell>
+                <TableCell align="right">{item.category?.name}</TableCell>
+                <TableCell align="right">
+                  <Button onClick={() => handleUpdateStoke(item.id)}>{item.inStock ?
+                    <Typography sx={{color: "green"}}>Yes</Typography> : "No"}</Button>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {ingredient?.ingredients?.map((item) => (
-                <TableRow
-                  key={item.id}
-                  sx={{'&:last-child td, &:last-child th': {border: 0}}}
-                >
-                  
-                  <TableCell align="right">{item.name}</TableCell>
-                  <TableCell align="right">{item.category?.name}</TableCell>
-                  <TableCell align="right">
-                    <Button onClick={()=>handleUpdateStoke(item.id)}>{item.inStoke?"Yes":"No"}</Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
 
       <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
           <CreateIngredientForm handleClose={handleClose}/>

@@ -34,7 +34,7 @@ public class AdminOrderController {
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
-    @GetMapping("/order/{id}/{orderStatus}")
+    @PutMapping("/order/{id}/{orderStatus}")
     private ResponseEntity<Order> updateOrderStatus(
             @PathVariable Long id,
             @PathVariable String orderStatus,

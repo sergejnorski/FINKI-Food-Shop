@@ -17,10 +17,10 @@ import { fetchRestaurantsOrder, updateOrderStatus } from "../../State/Restaurant
 import React, { useState } from 'react';
 
 const orderStatus = [
-  {label: "Pending", value:"PENDING"},
-  {label: "Completed", value:"COMPLETED"},
-  {label: "Out For Delivery", value:"OUT_FOR_DELIVERY"},
-  {label: "Delivered", value:"DELIVERED"},
+  {label: "Во процес", value:"PENDING"},
+  {label: "Готова", value:"COMPLETED"},
+  {label: "За испорака", value:"OUT_FOR_DELIVERY"},
+  {label: "Испорачана", value:"DELIVERED"},
 
 ]
 
@@ -30,13 +30,6 @@ export const OrderTable = ({status}) => {
   const { restaurant, restaurantOrder } = useSelector(store => store);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
-
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
- 
-  
-
 
   useEffect(() => {
     if (restaurant.usersRestaurant?.id) {
@@ -78,44 +71,34 @@ const filteredOrders = restaurantOrder?.orders?.filter(order => status === "ALL"
   return (
     <Box>
       <Card className='mt-1'>
-        <CardHeader title={"All Orders"} sx={{ paddingTop: "2rem", alignItems: "center" }} />
+        <CardHeader title={"Сите нарачки"} sx={{ paddingTop: "2rem", alignItems: "center" }} />
         </Card>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
                         <TableRow>
-                            {!isMobile && <TableCell align="center">Id</TableCell>}
-                            {!isMobile && <TableCell align="center">Image</TableCell>}
-                            <TableCell align="center">Customer</TableCell>
-                            <TableCell align="center">Address</TableCell>
-                            <TableCell align="center">Mobile</TableCell>
-                            <TableCell align="center">Price</TableCell>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center">Ingredients</TableCell>
-                            <TableCell align="center">Status</TableCell>
+                            {!isMobile && <TableCell>Број</TableCell>}
+                            <TableCell align="center">Купувач</TableCell>
+                            <TableCell align="center">Адреса</TableCell>
+                            <TableCell align="center">Телефонски број</TableCell>
+                            <TableCell align="center">Цена</TableCell>
+                            <TableCell align="center">Нарачка</TableCell>
+                            <TableCell align="center">Состојки</TableCell>
+                            <TableCell align="center">Статус</TableCell>
                             
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {filteredOrders?.map((row) => (
                             <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                                {!isMobile && <TableCell align="center" component="th" scope="row">{row.id}</TableCell>}
-                                {!isMobile && (
-                                    <TableCell align="center">
-                                        <AvatarGroup>
-                                            {row?.items?.map((item, index) => (
-                                                <Avatar key={index} src={item?.food?.images[0]} />
-                                            ))}
-                                        </AvatarGroup>
-                                    </TableCell>
-                                )}
+                                {!isMobile && <TableCell component="th" scope="row">{row.id}</TableCell>}
                                 <TableCell align="center">{row?.customer?.fullName}</TableCell>
                                 <TableCell align="center">
                                     <p>{row?.deliveryAddress?.streetAddress}</p>
                                     <p>{row?.deliveryAddress?.city}</p>
                                 </TableCell>
                                 <TableCell align="center">{row?.mobile}</TableCell>
-                                <TableCell align="center">Rs. {row?.totalPrice}.00</TableCell>
+                                <TableCell align="center">{row?.totalPrice} ден.</TableCell>
                                 <TableCell align="center">
                                     {row?.items?.map((item, index) => (
                                         <p key={index}>
