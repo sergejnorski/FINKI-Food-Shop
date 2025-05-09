@@ -4,30 +4,36 @@ import {darkTheme} from './Theme/DarkTheme';
 import {useEffect} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {getUser} from "./State/Authentication/Action";
-import {findCart, getAllCartItems} from "./State/Cart/Action";
+import {findCart} from "./State/Cart/Action";
 import {Routers} from "./component/Routers/Routers";
-import {getRestaurantByUserId} from "./State/Restaurant/Action";
+import {
+  getAllEvents,
+  getAllFoods,
+  getAllRestaurantsAction,
+  getRestaurantByUserId
+} from "./State/Restaurant/Action";
 
 function App() {
 
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
-  const {auth, cart} = useSelector(store => store);
+  const {auth} = useSelector(store => store);
 
   useEffect(() => {
-    dispatch(getUser(auth.jwt || jwt))
-    dispatch(findCart(jwt));
-  }, [auth.jwt]);
+    Promise.resolve().then(() => {
+      const token = auth.jwt || jwt;
 
-  useEffect(() => {
-    dispatch(getRestaurantByUserId(auth.jwt || jwt));
+      if (token) {
+        dispatch(getUser(token));
+        dispatch(getRestaurantByUserId(token));
+        dispatch(findCart(token));
+        dispatch(getAllEvents(token));
+      }
 
-  }, [auth.user]);
-
-  useEffect(() => {
-    if (!cart.cart?.id) return;
-    dispatch(getAllCartItems({ cartId: cart.cart.id, token: jwt }));
-  }, [cart.cart?.id]);
+      dispatch(getAllRestaurantsAction());
+      dispatch(getAllFoods());
+    });
+  }, [auth.jwt, dispatch, jwt]);
 
   return (
     <ThemeProvider theme={darkTheme}>

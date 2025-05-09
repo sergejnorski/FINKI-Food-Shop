@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,11 +38,16 @@ public class Order {
     private Address deliveryAddress;
 
     @OneToMany
-    private List<OrderItem> items;
+    private List<OrderItem> items=new ArrayList<>();
 
-//    private Payment payment;
+    private String mobile;
 
     private int totalItem;
 
     private Long totalPrice;
+
+    @JsonIgnore
+    private String sessionId;
+
+    private String paymentStatus;
 }

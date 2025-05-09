@@ -12,9 +12,11 @@ import java.util.*;
 
 @Service
 public class JwtProvider {
+
     private SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
     public String generateToken(Authentication auth){
+
         Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
         String roles = populateAuthorities(authorities);
 
@@ -29,14 +31,18 @@ public class JwtProvider {
     }
 
     public String getEmailFromJwtToken(String jwt){
+
         jwt = jwt.substring(7);
+
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
+
         String email = String.valueOf(claims.get("email"));
 
         return email;
     }
 
     private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {
+
         Set<String> auths = new HashSet<>();
 
         for(GrantedAuthority authority:authorities){

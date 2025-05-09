@@ -7,7 +7,6 @@ import com.finki.request.AddCartItemRequest;
 import com.finki.request.UpdateCartItemRequest;
 import com.finki.service.CartService;
 import com.finki.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +17,13 @@ import java.util.List;
 @RequestMapping("/api")
 public class CartController {
 
-    @Autowired
-    private CartService cartService;
+    private final CartService cartService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public CartController(CartService cartService, UserService userService) {
+        this.cartService = cartService;
+        this.userService = userService;
+    }
 
     @PutMapping("/cart/add")
     private ResponseEntity<CartItem> addItemToCart(@RequestBody AddCartItemRequest req,
@@ -34,9 +35,8 @@ public class CartController {
     }
 
     @PutMapping("/cart-item/update")
-    private ResponseEntity<CartItem> updateCartItemQuantity(
-            @RequestBody UpdateCartItemRequest req,
-            @RequestHeader("Authorization") String jwt) throws Exception {
+    private ResponseEntity<CartItem> updateCartItemQuantity(@RequestBody UpdateCartItemRequest req,
+                                                            @RequestHeader("Authorization") String jwt) throws Exception {
 
         CartItem cartItem = cartService.updateCartItemQuantity(req.getCartItemId(),req.getQuantity());
 
@@ -44,9 +44,8 @@ public class CartController {
     }
 
     @DeleteMapping("/cart-item/{id}/remove")
-    private ResponseEntity<Cart> removeCartItem(
-            @PathVariable Long id,
-            @RequestHeader("Authorization") String jwt) throws Exception {
+    private ResponseEntity<Cart> removeCartItem(@PathVariable Long id,
+                                                @RequestHeader("Authorization") String jwt) throws Exception {
 
         Cart cart = cartService.removeItemFromCart(id,jwt);
 
@@ -54,8 +53,7 @@ public class CartController {
     }
 
     @PutMapping("/cart/clear")
-    private ResponseEntity<Cart> clearCart(
-            @RequestHeader("Authorization") String jwt) throws Exception {
+    private ResponseEntity<Cart> clearCart(@RequestHeader("Authorization") String jwt) throws Exception {
 
         User user = userService.findUserByJwtToken(jwt);
 
@@ -74,14 +72,17 @@ public class CartController {
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
-    @GetMapping("/carts/{cartId}/items")
-    private ResponseEntity<?> getCartItems(@PathVariable Long cartId) {
-        try {
-            List<CartItem> cartItems = cartService.getCartItems(cartId);
-            return new ResponseEntity<>(cartItems, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/carts/{id}/items")
+    public ResponseEntity<List<CartItem>> getAllCartItems(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Long id
+
+    ) throws Exception {
+
+        User user = userService.findUserByJwtToken(jwt);
+        Cart cart = cartService.findCartByUserId(user.getId());
+
+        return new ResponseEntity<>(cart.getItem(), HttpStatus.OK);
     }
 
 }

@@ -3,19 +3,29 @@ import {Button, TextField} from "@mui/material";
 import {createIngredientCategory} from "../../State/Ingredients/Action";
 import {useDispatch, useSelector} from "react-redux";
 
-const CreateIngredientCategoryForm = () => {
+const CreateIngredientCategoryForm = ({handleClose}) => {
     const dispatch=useDispatch();
     const jwt=localStorage.getItem("jwt");
     const {restaurant} = useSelector(store=>store)
 
     const [formData, setFormData] = useState({
         name: "",
+        ingredientCategoryId: ""
     });
+    const [error, setError] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data = {name: formData.name, restaurantId: restaurant.usersRestaurant.id}
-        dispatch(createIngredientCategory({data, jwt}))
+        if(!formData.name.trim()){
+            setError("Please enter Ingredient Category Name");
+            return;
+        }
+        else{
+            handleClose();
+        }
+         const data = {name: formData.name, restaurantId: restaurant?.usersRestaurant?.id}
+         dispatch(createIngredientCategory({data: data, jwt}));
+         setError("");
     }
 
     const handleInputChange = (e) => {
@@ -31,12 +41,15 @@ const CreateIngredientCategoryForm = () => {
                 <h1 className='text-gray-400 text-center text-xl pb-10'>Create Ingredient Category</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <TextField fullWidth
-                               id="name"
+                               id="categoryName"
                                name="name"
-                               label="Category"
+                               label="Category Ingredient"
                                variant="outlined"
                                onChange={handleInputChange}
-                               value={formData.name}>
+                               value={formData.name}
+                               error={!!error} 
+                              helperText={error}
+                               >
                     </TextField>
 
                     <Button variant="contained" type="submit">

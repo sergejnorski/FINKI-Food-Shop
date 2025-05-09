@@ -11,7 +11,11 @@ export const createOrder = (reqData) => {
   return async (dispatch) => {
     dispatch({type: CREATE_ORDER_REQUEST});
     try {
-      const {data} = await api.post('/api/order', reqData.order, {
+      const {data} = await api.post('/api/order/create', {
+        deliveryAddress: reqData.order.deliveryAddress,
+        restaurantId: reqData.order.restaurantId,
+        total: reqData.total
+      }, {
         headers: {
           Authorization: `Bearer ${reqData.jwt}`,
         },
@@ -21,8 +25,9 @@ export const createOrder = (reqData) => {
       console.error("error ", error);
       dispatch({type: CREATE_ORDER_FAILURE, payload: error});
     }
-  }
-}
+  };
+};
+
 
 export const getUsersOrders = (jwt) => {
   return async (dispatch) => {

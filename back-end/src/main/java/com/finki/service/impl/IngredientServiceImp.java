@@ -7,7 +7,6 @@ import com.finki.repository.IngredientCategoryRepository;
 import com.finki.repository.IngredientItemRepository;
 import com.finki.service.IngredientsService;
 import com.finki.service.RestaurantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,14 +15,15 @@ import java.util.Optional;
 @Service
 public class IngredientServiceImp implements IngredientsService {
 
-    @Autowired
-    private IngredientItemRepository ingredientItemRepository;
+    private final IngredientItemRepository ingredientItemRepository;
+    private final IngredientCategoryRepository ingredientCategoryRepository;
+    private final RestaurantService restaurantService;
 
-    @Autowired
-    private IngredientCategoryRepository ingredientCategoryRepository;
-
-    @Autowired
-    private RestaurantService restaurantService;
+    public IngredientServiceImp(IngredientItemRepository ingredientItemRepository, IngredientCategoryRepository ingredientCategoryRepository, RestaurantService restaurantService) {
+        this.ingredientItemRepository = ingredientItemRepository;
+        this.ingredientCategoryRepository = ingredientCategoryRepository;
+        this.restaurantService = restaurantService;
+    }
 
     @Override
     public IngredientCategory createIngredientCategory(String name, Long restaurantId) throws Exception {
@@ -43,7 +43,7 @@ public class IngredientServiceImp implements IngredientsService {
         Optional<IngredientCategory> opt = ingredientCategoryRepository.findById(id);
 
         if(opt.isEmpty()){
-            throw new Exception("ingredient category not found");
+            throw new Exception("Ingredient Category Not Found.");
         }
 
         return opt.get();
@@ -81,10 +81,11 @@ public class IngredientServiceImp implements IngredientsService {
 
     @Override
     public IngredientsItem updateStock(Long id) throws Exception {
+
         Optional<IngredientsItem> optionalIngredientsItem = ingredientItemRepository.findById(id);
 
         if(optionalIngredientsItem.isEmpty()){
-            throw  new Exception("ingredient not found");
+            throw  new Exception("Ingredient Not Found.");
         }
 
         IngredientsItem ingredientsItem = optionalIngredientsItem.get();

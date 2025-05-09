@@ -2,6 +2,7 @@ package com.finki.service;
 
 import com.finki.model.Cart;
 import com.finki.model.CartItem;
+import com.finki.model.Restaurant;
 import com.finki.request.AddCartItemRequest;
 
 import java.util.List;
@@ -24,4 +25,5 @@ public interface CartService {
 
     public List<CartItem> getCartItems(Long cartId) throws Exception;
 
+    Long calculateCartTotalsByRestaurantID(Cart cart, Restaurant restaurant) throws Exception;
 }

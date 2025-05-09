@@ -18,14 +18,14 @@ export const LoginForm = () => {
   return (
     <div>
       <Typography variant='h5' className='text-center'>
-        Login
+        Најава
       </Typography>
       <Formik onSubmit={handleSubmit} initialValues={initialValues}>
         <Form>
 
           <Field as={TextField}
                  name="email"
-                 label="email"
+                 label="е-пошта"
                  fullWidth
                  variant="outlined"
                  margin="normal"
@@ -33,20 +33,20 @@ export const LoginForm = () => {
           />
           <Field as={TextField}
                  name="password"
-                 label="password"
+                 label="лозинка"
                  fullWidth
                  variant="outlined"
                  margin="normal"
 
           />
-          <Button sx={{mt: 2, padding: "1rem"}} fullWidth type="submit" variant='contained'>Login</Button>
+          <Button sx={{mt: 2, padding: "1rem"}} fullWidth type="submit" variant='contained'>Најава</Button>
 
         </Form>
       </Formik>
       <Typography variant='body2' align='center' sx={{mt: 3}}>
-        Dont have an account?
+        Сеуште немате корисничка сметка?
         <Button size='small' onClick={() => navigate("/account/register")}>
-          Register
+          Регистрација
         </Button>
       </Typography>
     </div>

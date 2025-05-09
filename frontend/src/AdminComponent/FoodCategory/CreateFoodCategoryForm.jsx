@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {Button, TextField} from "@mui/material";
+import {Button, TextField,Typography } from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {createCategoryAction} from "../../State/Restaurant/Action";
 
-const CreateFoodCategoryForm = () => {
+const CreateFoodCategoryForm = ({handleClose}) => {
     const {restaurant} = useSelector((store) => store);
     const dispatch = useDispatch();
 
@@ -11,17 +11,21 @@ const CreateFoodCategoryForm = () => {
         categoryName: "",
         restaurantId: ""
     });
-
+    const [categoryNameError, setCategoryNameError] = useState(false);
     const handleSubmit = (e) => {
         e.preventDefault();
-        const data={
-            name:formData.categoryName,
-            restaurantId:{
-                id:1,
-            },
-        };
+        if(formData.categoryName.trim()){
+            const data={
+                name: formData.categoryName,
+                restaurantId: formData.restaurantId
+            };
         dispatch(createCategoryAction({reqData:data, jwt:localStorage.getItem("jwt")}));
-        console.log(data)
+        setCategoryNameError(false); 
+        handleClose();
+        }
+        else {
+            setCategoryNameError(true);
+        }
     }
 
     const handleInputChange = (e) => {
@@ -43,8 +47,13 @@ const CreateFoodCategoryForm = () => {
                            variant="outlined"
                            onChange={handleInputChange}
                            value={formData.categoryName}>
+                            error={categoryNameError}
                 </TextField>
-
+                {categoryNameError && ( 
+                        <Typography variant="body2" color="error">
+                            Category name is required.
+                        </Typography>
+                    )}
                 <Button variant="contained" type="submit">
                     Create Category
                 </Button>

@@ -65,6 +65,7 @@ export const getAllCartItems = (reqData) => {
       dispatch({type: GET_ALL_CART_ITEMS_SUCCESS, payload: response.data});
     } catch (error) {
       dispatch({type: GET_ALL_CART_ITEMS_FAILURE, payload: error});
+      console.error("Error ", error);
     }
   }
 }
@@ -79,16 +80,12 @@ export const addItemToCart = (reqData) => {
         },
       });
       dispatch({ type: ADD_ITEM_TO_CART_SUCCESS, payload: data });
-
-      dispatch(findCart(reqData.token));
-
     } catch (error) {
       console.error("error ", error);
       dispatch({ type: ADD_ITEM_TO_CART_FAILURE, payload: error });
     }
   }
 }
-
 
 export const updateCartItem = (reqData) => {
   return async (dispatch) => {
@@ -102,7 +99,7 @@ export const updateCartItem = (reqData) => {
       dispatch({type: UPDATE_CARTITEM_SUCCESS, payload: data});
     } catch (error) {
       console.error("error ", error);
-      dispatch({type: UPDATE_CARTITEM_FAILURE, payload: error});
+      dispatch({type: UPDATE_CARTITEM_FAILURE, payload: error.message});
     }
   }
 }

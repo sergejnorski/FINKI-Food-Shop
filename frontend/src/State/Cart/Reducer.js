@@ -19,25 +19,20 @@ export const cartReducer = (state = initialState, action) => {
       }
     case actionTypes.FIND_CART_SUCCESS:
     case actionTypes.CLEAR_CART_SUCCESS:
-      return {...state, loading: false, cart: action.payload, cartItems: action.payload.items};
+      return {...state, loading: false, cart: action.payload, cartItems: action.payload.item};
     case actionTypes.ADD_ITEM_TO_CART_SUCCESS:
       return {
         ...state,
         loading: false,
-        cartItems: [action.payload, ...(state.cartItems || [])],
+        cartItems: [...state.cartItems, action.payload],
       };
     case actionTypes.UPDATE_CARTITEM_SUCCESS:
-      const updatedItems = state.cartItems.map(item =>
-        item.id === action.payload.id ? action.payload : item
-      );
-      const newTotal = updatedItems.reduce((acc, item) => acc + item.totalPrice, 0);
       return {
         ...state,
-        cartItems: updatedItems,
-        cart: {
-          ...state.cart,
-          total: newTotal,
-        },
+        loading: false,
+        cartItems: state.cartItems.map((item) =>
+          item.id === action.payload.id ? action.payload : item
+        ),
       };
     case actionTypes.GET_ALL_CART_ITEMS_SUCCESS:
       return {

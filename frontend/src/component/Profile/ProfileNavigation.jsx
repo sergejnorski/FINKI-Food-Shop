@@ -10,29 +10,28 @@ import {Divider, Drawer, useMediaQuery} from '@mui/material';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch} from "react-redux";
 import {logout} from "../../State/Authentication/Action";
+import {ArrowBack} from "@mui/icons-material";
 
 
 const menu = [
-  {title: "Orders", icon: <ShoppingBagIcon/>},
-  {title: "Favorites", icon: <FavoriteIcon/>},
-  {title: "Address", icon: <HomeIcon/>},
-  {title: "Payment", icon: <AccountBalanceWalletIcon/>},
-  {title: "Notification", icon: <NotificationsActiveIcon/>},
-  {title: "Events", icon: <EventIcon/>},
-  {title: "Logout", icon: <LogoutIcon/>}
+  {title: "Нарачки", icon: <ShoppingBagIcon/>, path: "orders"},
+  {title: "Омилени маркети", icon: <FavoriteIcon/>, path: "favorites"},
+  {title: "Адреса за нарачка", icon: <HomeIcon/>, path: "address"},
+  // {title: "Events", icon: <EventIcon/>},
+  {title: "Одјава", icon: <LogoutIcon/>}
 ]
 export const ProfileNavigation = ({open, handleClose}) => {
   const isSmallScreen = useMediaQuery('(max-width:900px)');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleNavigate = (item) => {
-    if (item.title === "Logout") {
+    if (item.title === "Одјава") {
       dispatch(logout());
       navigate("/");
-    } else
-    navigate(`/my-profile/${item.title.toLowerCase()}`)
+    } else {
+      navigate(`/my-profile/${item.path}`)
+    }
   }
-
 
   return (
     <div>
@@ -41,10 +40,19 @@ export const ProfileNavigation = ({open, handleClose}) => {
         onClose={handleClose}
         open={isSmallScreen ? open : true}
         anchor='left'
-        sx={{zIndex: -1, position: "sticky"}}>
-        <div className='w-[50vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl pt-16 gap-8'>
+        sx={{zIndex: 10}}>
+        <div
+          className='w-[50vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl pt-16 gap-8'>
+          <div className='px-5 flex items-center gap-5 cursor-pointer'
+               onClick={() => navigate('/')}
+          >
+            <ArrowBack/>
+            <span>Назад</span>
+          </div>
+          <Divider/>
           {menu.map((item, i) => <>
-            <div onClick={() => handleNavigate(item)} className='px-5 flex items-center space-x-5 cursor-pointer'>
+            <div onClick={() => handleNavigate(item)}
+                 className='px-5 flex items-center space-x-5 cursor-pointer'>
               {item.icon}
               <span>
                         {item.title}

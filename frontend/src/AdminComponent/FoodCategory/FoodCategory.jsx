@@ -7,3 +7,4 @@ export const FoodCategory = () => {
     </div>
   )
 }
+export default FoodCategory
