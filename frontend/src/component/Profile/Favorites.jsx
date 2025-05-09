@@ -14,7 +14,7 @@ export const Favorites = () => {
 
   return (
     <div>
-      <h1 className="py-5 text-xl font-semibold text-center">My Favorites</h1>
+      <h1 className="py-5 text-xl font-semibold text-center">Омилените маркети</h1>
       <div className="flex flex-wrap justify-center gap-3">
         {userFavorites?.map((item) => (
           <RestaurantCard key={item.id} item={item}/>

@@ -11,12 +11,15 @@ import {
 import React, {useState} from 'react'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {categorizeIngredients} from "../util/categorizeIngredients";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {addItemToCart} from "../../State/Cart/Action";
+import {useNavigate} from "react-router-dom";
 
 const MenuCard = ({item}) => {
+  const navigate = useNavigate();
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const dispatch = useDispatch();
+  const {auth} = useSelector(store => store);
 
   const handleCheckboxChange = (itemName) => {
     if (selectedIngredients.includes(itemName)) {
@@ -28,6 +31,9 @@ const MenuCard = ({item}) => {
 
   const handleAddItemToCart = (e) => {
     e.preventDefault();
+    if (!auth.user) {
+      navigate('/account/login');
+    }
     const reqData = {
       token: localStorage.getItem("jwt"),
       cartItem: {

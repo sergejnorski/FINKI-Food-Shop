@@ -7,7 +7,7 @@ import {ErrorMessage, Field, Form, Formik} from 'formik';
 import {useDispatch, useSelector} from "react-redux";
 import {createOrder} from "../../State/Order/Action";
 import {useNavigate} from "react-router-dom";
-import {getUser} from "../../State/Authentication/Action";
+import {addAddress, getUser} from "../../State/Authentication/Action";
 import * as Yup from "yup";
 import {clearCartAction} from "../../State/Cart/Action";
 
@@ -58,21 +58,18 @@ export const Cart = () => {
 
   const handleOnSubmit = (values) => {
     const data = {
-      jwt: localStorage.getItem("jwt"),
-      total: cart?.cart?.total,
-      order: {
-        restaurantId: cart.cartItems[0].food?.restaurant.id,
-        deliveryAddress: {
-          fullName: auth.user?.fullName,
-          streetAddress: values.streetAddress,
-          city: values.city,
-          mobile: values.mobile,
-          locationType: values.location,
-        }
-      }
-    }
-    console.log(data)
-  }
+      jwt: localStorage.getItem('jwt'),
+      deliveryAddress: {
+        mobile: values.mobile,
+        fullName: auth.user?.fullName,
+        streetAddress: values.streetAddress,
+        city: values.city,
+        locationType: values.location,
+      },
+    };
+    dispatch(addAddress(data));
+    handleClose();
+  };
 
   useEffect(() => {
     if (jwt) {
@@ -144,12 +141,11 @@ export const Cart = () => {
                   }
                 }
               };
-              console.log(data);
               dispatch(createOrder(data));
               dispatch(clearCartAction());
             }}
           >
-            Place Order
+            Нарачај
           </Button>
         </div>
         </section>
@@ -170,10 +166,10 @@ export const Cart = () => {
               <Card className="flex gap-5 w-64 p-5">
                 <AddLocation/>
                 <div className='space-y-3 text-gray-500'>
-                  <h1 className='font-semibold text-lg text-white'>Add New Address</h1>
+                  <h1 className='font-semibold text-lg text-white'>Додај нова адреса</h1>
 
                   <Button variant='contained' fullWidth onClick={handleOpenAddressModal}>
-                    Add
+                    Додај
                   </Button>
                 </div>
               </Card>
@@ -196,13 +192,13 @@ export const Cart = () => {
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <h1 className="flex justify-center text-xl font-bold text-gray-400">
-                      Add Address
+                      Додајте нова адреса
                     </h1>
                   </Grid>
                   <Grid item xs={12}>
                     <Field as={TextField}
                            name="location"
-                           label="Location Type"
+                           label="Тип на локација"
                            fullWidth
                            variant="outlined"
                            helperText={<ErrorMessage name="location"/>}
@@ -212,7 +208,7 @@ export const Cart = () => {
                     <Field
                       as={TextField}
                       name="streetAddress"
-                      label="Address"
+                      label="Адреса"
                       fullWidth
                       variant="outlined"
                       helperText={<ErrorMessage name="streetAddress"/>}
@@ -222,7 +218,7 @@ export const Cart = () => {
                     <Field
                       as={TextField}
                       name="mobile"
-                      label="Mobile"
+                      label="Телефонски број"
                       fullWidth
                       variant="outlined"
                       helperText={<ErrorMessage name="mobile"/>}
@@ -232,7 +228,7 @@ export const Cart = () => {
                     <Field
                       as={TextField}
                       name="city"
-                      label="City"
+                      label="Град"
                       fullWidth
                       variant="outlined"
                       helperText={<ErrorMessage name="city"/>}
@@ -246,7 +242,7 @@ export const Cart = () => {
                       color="primary"
                       className=""
                     >
-                      Add
+                      Додај
                     </Button>
                   </Grid>
                 </Grid>

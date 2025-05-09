@@ -3,6 +3,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import {Button, Card} from '@mui/material';
 import {useLocation} from "react-router-dom";
 
+
+
 export const AddressCard = ({ item, isSelected, onSelect }) => {
   return (
     <Card
@@ -23,7 +25,7 @@ export const AddressCard = ({ item, isSelected, onSelect }) => {
             fullWidth
             style={{ marginTop: '10px' }}
           >
-            {isSelected ? "Selected" : "Select"}
+            {isSelected ? "Изберена" : "Изберете"}
           </Button>
         )}
       </div>

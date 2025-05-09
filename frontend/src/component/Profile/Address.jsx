@@ -64,7 +64,7 @@ export const Address = () => {
     <div>
       <section className='flex justify-center px-5 pb-10 lg:pb-0'>
         <div>
-          <h1 className='py-10 text-2xl font-semibold text-center'>Address</h1>
+          <h1 className='py-10 text-2xl font-semibold text-center'>Адреси за достава</h1>
           <div className='flex flex-wrap justify-center gap-5 pb-20'>
             {auth?.address?.map((item, index) => (
               <AddressCard key={index} item={item}/>
@@ -72,9 +72,9 @@ export const Address = () => {
             <Card className='flex w-64 gap-5 p-5'>
               <AddLocationIcon/>
               <div className='space-y-3 text-gray-500'>
-                <h1 className='text-lg font-semibold'>Add New Address</h1>
+                <h1 className='text-lg font-semibold'>Додајте нова адреса</h1>
                 <Button variant='contained' fullWidth onClick={handleOpenAddressModal}>
-                  Add
+                  Додај
                 </Button>
               </div>
             </Card>

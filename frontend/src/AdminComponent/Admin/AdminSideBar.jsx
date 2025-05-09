@@ -6,7 +6,8 @@ import {
   Fastfood,
   Logout,
   ShoppingBag,
-  ShopTwo
+  ShopTwo,
+  ArrowBack
 } from '@mui/icons-material'
 import {Divider, Drawer, useMediaQuery} from "@mui/material";
 import {useNavigate} from "react-router-dom";
@@ -48,17 +49,26 @@ export const AdminSideBar = ({handleClose}) => {
           open={true}
           anchor='left'
           sx={{zIndex: 10}}>
-          <div className='w-[70vw] lg:w-[20vw] h-screen flex flex-col justify-center text-xl space-y-[1.65rem]'>
+          <div
+            className='w-[70vw] lg:w-[20vw] h-screen flex flex-col justify-center text-xl space-y-[1.65rem]'>
+            <div className='px-5 flex items-center gap-5 cursor-pointer'
+                 onClick={() => navigate('/')}
+            >
+              <ArrowBack/>
+              <span>Назад</span>
+            </div>
+            <Divider/>
             {
               menu.map((item, i) =>
-              <>
-                <div className='px-5 flex items-center gap-5 cursor-pointer' onClick={() => handleNavigate(item)}>
-                  {item.icon}
-                  <span>{item.title}</span>
-                </div>
-                {i !== (menu.length - 1) && <Divider/>}
-              </>
-            )}
+                <>
+                  <div className='px-5 flex items-center gap-5 cursor-pointer'
+                       onClick={() => handleNavigate(item)}>
+                    {item.icon}
+                    <span>{item.title}</span>
+                  </div>
+                  {i !== (menu.length - 1) && <Divider/>}
+                </>
+              )}
           </div>
 
         </Drawer>
