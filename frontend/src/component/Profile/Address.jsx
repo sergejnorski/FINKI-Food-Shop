@@ -100,14 +100,13 @@ export const Address = () => {
                   <Form>
                     <Grid container spacing={2}>
                       <Grid item xs={12}>
-                        <h1 className='flex justify-center text-xl font-bold text-gray-400'>Add
-                          Address</h1>
+                        <h1 className='flex justify-center text-xl font-bold text-gray-400'>Додај адреса</h1>
                       </Grid>
                       <Grid item xs={12}>
                         <Field
                           as={TextField}
                           name="location"
-                          label="Location Type"
+                          label="Име на локацијата"
                           fullWidth
                           variant="outlined"
                           helperText={<ErrorMessage name="location"/>}
@@ -117,7 +116,7 @@ export const Address = () => {
                         <Field
                           as={TextField}
                           name="streetAddress"
-                          label="Address"
+                          label="Адреса"
                           fullWidth
                           variant="outlined"
                           helperText={<ErrorMessage name="streetAddress"/>}
@@ -127,7 +126,7 @@ export const Address = () => {
                         <Field
                           as={TextField}
                           name="mobile"
-                          label="Mobile"
+                          label="Телефонски број"
                           fullWidth
                           variant="outlined"
                           helperText={<ErrorMessage name="mobile"/>}
@@ -137,7 +136,7 @@ export const Address = () => {
                         <Field
                           as={TextField}
                           name="city"
-                          label="City"
+                          label="Град"
                           fullWidth
                           variant="outlined"
                           helperText={<ErrorMessage name="city"/>}
@@ -146,7 +145,7 @@ export const Address = () => {
                       <Grid item xs={12}>
                         <Button fullWidth variant='contained' type='submit' color='primary'
                                 disabled={isSubmitting}>
-                          {isSubmitting ? 'Adding...' : 'Add'}
+                          {isSubmitting ? 'Се додава...' : 'Додај'}
                         </Button>
                       </Grid>
                     </Grid>

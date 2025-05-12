@@ -32,9 +32,22 @@ export const Cart = () => {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const {cart, auth} = useSelector(store => store);
   const jwt = localStorage.getItem("jwt");
+  const [price, setPrice] = useState(0)
   console.log(cart)
   const handleClose = () => setOpen(false);
 
+  const calculatePrice = () => {
+     let total = cart.cartItems.reduce((total, item) => {
+      return total + item.totalPrice;
+    }, 0);
+     setPrice(total);
+  }
+
+  useEffect(() => {
+    if (cart.cartItems) {
+      calculatePrice();
+    }
+  }, [cart.cartItems]);
 
   const handleOpenAddressModal = () => setOpen(true);
 
@@ -104,7 +117,7 @@ export const Cart = () => {
             <div className='pb-3 space-y-3'>
               <div className='flex justify-between text-gray-400'>
                 <p>Вкупно</p>
-                <p>{cart.cart?.total} ден.</p>
+                <p>{price} ден.</p>
               </div>
               <div className='flex justify-between text-gray-400'>
                 <p>Достава</p>
@@ -112,13 +125,13 @@ export const Cart = () => {
               </div>
               <div className='flex justify-between text-gray-400'>
                 <p>DDV 18%</p>
-                <p>{Math.ceil(+cart.cart?.total * 0.18)} ден.</p>
+                <p>{Math.ceil(+price * 0.18)} ден.</p>
               </div>
               <Divider/>
             </div>
             <div className='flex justify-between text-gray-400'>
               <p>Вкупно</p>
-              <p>{cart.cart?.total + Math.ceil(+cart.cart?.total * 0.18) + 80} ден.</p>
+              <p>{price + Math.ceil(+price * 0.18) + 80} ден.</p>
             </div>
           </div><div className="px-5 mt-5">
           <Button

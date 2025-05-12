@@ -95,7 +95,7 @@ const CreateRestaurantForm = () => {
     return (
       <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
           <div className="lg:max-w-4xl">
-              <h1 className='font-bold text-2xl text-center py-2'>Add New Restaurant</h1>
+              <h1 className='font-bold text-2xl text-center py-2'>Креирање на ресторан</h1>
               <form onSubmit={handleSubmit} className='space-y-4'>
                   <Grid container spacing={2}>
                       <Grid className='flex flex-wrap gap-5' item xs={12}>
@@ -134,18 +134,18 @@ const CreateRestaurantForm = () => {
                       </Grid>
 
                       {[
-                          { name: "name", label: "Name" }, { name: "description", label: "Description" },
-                          { name: "cuisineType", label: "Cuisine Type" },
-                          { name: "openingHours", label: "Opening Hours" },
-                          { name: "streetAddress", label: "Street Address" },
-                          { name: "city", label: "City" },
-                          { name: "stateProvince", label: "State/Province" },
-                          { name: "postalCode", label: "Postal Code" },
-                          { name: "country", label: "Country" },
-                          { name: "email", label: "Email" },
-                          { name: "mobile", label: "Mobile" },
+                          { name: "name", label: "Име на маркетот" }, { name: "description", label: "Опис" },
+                          { name: "cuisineType", label: "Тип на маркет" },
+                          { name: "openingHours", label: "Работно време" },
+                          { name: "streetAddress", label: "Адреса" },
+                          { name: "city", label: "Град" },
+                          { name: "stateProvince", label: "Населба" },
+                          { name: "postalCode", label: "Поштенски код" },
+                          { name: "country", label: "Држава" },
+                          { name: "email", label: "Е-адреса" },
+                          { name: "mobile", label: "Телефонски број" },
                           { name: "instagram", label: "Instagram" },
-                          { name: "twitter", label: "Twitter" },
+                          { name: "X", label: "X" },
                       ].map(({ name, label }) => (
                         <Grid item xs={12} sm={6} key={name}>
                             <TextField
@@ -162,7 +162,7 @@ const CreateRestaurantForm = () => {
 
                       <Grid item xs={12}>
                           <Button type='submit' variant='contained' color='primary'>
-                              Create Restaurant
+                              Креирај
                           </Button>
                       </Grid>
                   </Grid>

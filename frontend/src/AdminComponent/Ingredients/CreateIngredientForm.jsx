@@ -59,12 +59,12 @@ const CreateIngredientForm = ({handleClose}) => {
     return (
         <div className=''>
             <div className='p-5'>
-                <h1 className='text-gray-400 text-center text-xl pb-10'>Create Ingredient</h1>
+                <h1 className='text-gray-400 text-center text-xl pb-10'>Додај состојка</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                 <TextField fullWidth
                            id="ingredient"
                            name="name"
-                           label="Ingredient"
+                           label="Состојка"
                            variant="outlined"
                            onChange={handleInputChange}
                            value={formData.name}
@@ -74,7 +74,7 @@ const CreateIngredientForm = ({handleClose}) => {
                 </TextField>
 
                 <FormControl fullWidth variant="outlined" error={errors.ingredientCategoryId}>
-            <InputLabel id="category-label">Category</InputLabel>
+            <InputLabel id="category-label">Категорија</InputLabel>
             <Select
               labelId="category-label"
               id="category"
@@ -93,7 +93,7 @@ const CreateIngredientForm = ({handleClose}) => {
           </FormControl>
 
                 <Button variant="contained" type="submit">
-                    Create Ingredient
+                    Додај
                 </Button>
                 </form>
             </div>

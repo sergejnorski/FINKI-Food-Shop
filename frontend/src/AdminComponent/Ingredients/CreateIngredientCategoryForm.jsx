@@ -38,12 +38,12 @@ const CreateIngredientCategoryForm = ({handleClose}) => {
     return (
         <div className=''>
             <div className='p-5'>
-                <h1 className='text-gray-400 text-center text-xl pb-10'>Create Ingredient Category</h1>
+                <h1 className='text-gray-400 text-center text-xl pb-10'>Додај категорија на состојки</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                     <TextField fullWidth
                                id="categoryName"
                                name="name"
-                               label="Category Ingredient"
+                               label="Категорија на состојки"
                                variant="outlined"
                                onChange={handleInputChange}
                                value={formData.name}
@@ -53,7 +53,7 @@ const CreateIngredientCategoryForm = ({handleClose}) => {
                     </TextField>
 
                     <Button variant="contained" type="submit">
-                        Create Category
+                        Креирај
                     </Button>
                 </form>
             </div>

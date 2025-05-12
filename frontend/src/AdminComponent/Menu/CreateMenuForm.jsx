@@ -106,7 +106,7 @@ const CreateMenuForm = () => {
         <div className='py-10 px-5 lg:flex items-center justify-center min-h-screen'>
             <div className="lg:max-w-4x1">
                 <h1 className='font-bold text-2xl text-center py-2'>
-                    Add New Menu
+                    Додајте продукт
                 </h1>
                 <form onSubmit={formik.handleSubmit} className='space-y-4'>
                     <Grid container spacing={2}>
@@ -160,7 +160,7 @@ const CreateMenuForm = () => {
                                         fullWidth
                                         id='name'
                                         name='name'
-                                        label='Name'
+                                        label='Име на продукт'
                                         variant='outlined'
                                         value={formik.values.name}
                                         onChange={formik.handleChange}
@@ -172,7 +172,7 @@ const CreateMenuForm = () => {
                             <TextField fullWidth
                                 id='description'
                                 name='description'
-                                label='Description'
+                                label='Опис'
                                 variant='outlined'
                                 value={formik.values.description}
                                 onChange={formik.handleChange}
@@ -184,7 +184,7 @@ const CreateMenuForm = () => {
                             <TextField fullWidth
                                 id='price'
                                 name='price'
-                                label='Price'
+                                label='Цена'
                                 variant='outlined'
                                 value={formik.values.price}
                                 onChange={formik.handleChange}
@@ -202,7 +202,7 @@ const CreateMenuForm = () => {
                                     name="category"
                                     value={formik.values.category}
                                     onChange={formik.handleChange}
-                                    label="Category"
+                                    label="Категорија"
                                 >
                                     {restaurant?.categories?.map((option) => (
                                         <MenuItem key={option} value={option}>
@@ -218,7 +218,7 @@ const CreateMenuForm = () => {
 
                         <Grid item sm={12}>
                             <FormControl fullWidth>
-                                <InputLabel id="demo-multiple-chip-label">Ingredients</InputLabel>
+                                <InputLabel id="demo-multiple-chip-label">Состојки</InputLabel>
                                 <Select
                                     labelId="demo-multiple-chip-label"
                                     id="demo-multiple-chip"
@@ -248,7 +248,7 @@ const CreateMenuForm = () => {
 
                         <Grid item xs={12} sm={6}>
                             <FormControl fullWidth variant="outlined" error={formik.touched.vegetarian && Boolean(formik.errors.vegetarian)}>
-                                <InputLabel id="is-veg">Is Vegetarian</InputLabel>
+                                <InputLabel id="is-veg">Вегетеријанско?</InputLabel>
                                 <Select
                                   labelId="is-veg"
                                   id="vegetarian"
@@ -257,7 +257,7 @@ const CreateMenuForm = () => {
                                   onChange={(e) => formik.setFieldValue("vegetarian", e.target.value === "true")}
                                   label="Is Vegetarian"
                                 >
-                                    {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
+                                    {[{ label: "Да", value: true }, { label: "Не", value: false }].map((option) => (
                                       <MenuItem key={option.value.toString()} value={option.value.toString()}>
                                           {option.label}
                                       </MenuItem>
@@ -272,7 +272,7 @@ const CreateMenuForm = () => {
 
                         <Grid item xs={12} sm={6}>
                             <FormControl fullWidth variant="outlined" error={formik.touched.seasonal && Boolean(formik.errors.seasonal)}>
-                                <InputLabel id="is-seasonal">Is Seasonal</InputLabel>
+                                <InputLabel id="is-seasonal">Сезонско?</InputLabel>
                                 <Select
                                   labelId="is-seasonal"
                                   id="seasonal"
@@ -281,7 +281,7 @@ const CreateMenuForm = () => {
                                   onChange={(e) => formik.setFieldValue("seasonal", e.target.value === "true")}
                                   label="Is Seasonal"
                                 >
-                                    {[{ label: "Yes", value: true }, { label: "No", value: false }].map((option) => (
+                                    {[{ label: "Да", value: true }, { label: "Не", value: false }].map((option) => (
                                       <MenuItem key={option.value.toString()} value={option.value.toString()}>
                                           {option.label}
                                       </MenuItem>
@@ -300,7 +300,7 @@ const CreateMenuForm = () => {
                                 fullWidth
                                 type='submit'
                             >
-                                Submit
+                                Додај
                             </Button>
                         </Grid>
                     </Grid>

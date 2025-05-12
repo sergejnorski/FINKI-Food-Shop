@@ -38,12 +38,12 @@ const CreateFoodCategoryForm = ({handleClose}) => {
     return (
         <div className=''>
             <div className='p-5'>
-                <h1 className='text-gray-400 text-center text-xl pb-10'>Create Food Category</h1>
+                <h1 className='text-gray-400 text-center text-xl pb-10'>Креирај категорија</h1>
                 <form className="space-y-5" onSubmit={handleSubmit}>
                 <TextField fullWidth
                            id="categoryName"
                            name="categoryName"
-                           label="Food Category"
+                           label="Категорија"
                            variant="outlined"
                            onChange={handleInputChange}
                            value={formData.categoryName}>
@@ -51,11 +51,11 @@ const CreateFoodCategoryForm = ({handleClose}) => {
                 </TextField>
                 {categoryNameError && ( 
                         <Typography variant="body2" color="error">
-                            Category name is required.
+                            Внесете некоја категорија.
                         </Typography>
                     )}
                 <Button variant="contained" type="submit">
-                    Create Category
+                    Креирај
                 </Button>
                 </form>
             </div>
