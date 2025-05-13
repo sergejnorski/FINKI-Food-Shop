@@ -23,21 +23,27 @@ import java.util.List;
 public class AppConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(Authorize->Authorize
-                                .requestMatchers("/api/restaurants").permitAll()
-                                .requestMatchers("/api/food/all").permitAll()
-                                .requestMatchers("/api/event/all").permitAll()
-                                .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER","ADMIN")
-                                .requestMatchers("/api/**").authenticated()
-                                .anyRequest().permitAll()
-                ).addFilterBefore(new JwtTokenValidator(),  BasicAuthenticationFilter.class)
+                .authorizeHttpRequests(Authorize -> Authorize
+                        .requestMatchers("/api/restaurants").permitAll()
+                        .requestMatchers("/api/food/all").permitAll()
+                        .requestMatchers("/api/event/all").permitAll()
+                        .requestMatchers("/auth/signup").permitAll()
+                        .requestMatchers("/auth/signin").permitAll()
+                        .requestMatchers("/auth/verify").permitAll()
+                        .requestMatchers("/auth/resend-verification").permitAll()
+                        .requestMatchers("/auth/forgot-password").permitAll()
+                        .requestMatchers("/auth/reset-password").permitAll()
+                        .requestMatchers("/api/admin/**").hasAnyRole("RESTAURANT_OWNER", "ADMIN")
+                        .requestMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
+                .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors-> cors.configurationSource(corsConfigurationSource()));
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
-        return  http.build();
+        return http.build();
     }
 
     private CorsConfigurationSource corsConfigurationSource() {
@@ -46,11 +52,10 @@ public class AppConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
-                CorsConfiguration cfg=new CorsConfiguration();
+                CorsConfiguration cfg = new CorsConfiguration();
 
                 cfg.setAllowedOrigins(List.of(
-                        "http://localhost:3000/"
-                ));
+                        "http://localhost:3000/"));
 
                 cfg.setAllowedMethods(Collections.singletonList("*"));
                 cfg.setAllowCredentials(true);
@@ -64,7 +69,7 @@ public class AppConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

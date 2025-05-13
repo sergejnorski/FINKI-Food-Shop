@@ -5,5 +5,5 @@ import com.finki.response.PaymentResponse;
 
 public interface PaymentService {
 
-    public PaymentResponse createPaymentLink(OrderRequest orderRequest) throws Exception;
+    PaymentResponse createPaymentLink(OrderRequest orderRequest) throws Exception;
 }
