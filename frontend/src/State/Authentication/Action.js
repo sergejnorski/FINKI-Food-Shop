@@ -13,21 +13,24 @@ import axios from "axios";
 import {api, API_URL} from "../../component/config/api";
 
 export const registerUser = (reqData) => async (dispatch) => {
-  dispatch({type: REGISTER_REQUEST});
+  dispatch({ type: REGISTER_REQUEST });
   try {
-    const {data} = await axios.post(`${API_URL}/auth/signup`, reqData.userData);
+    const { data } = await axios.post(`${API_URL}/auth/signup`, reqData.userData);
     if (data.jwt) localStorage.setItem("jwt", data.jwt);
-    if (data.role === "ROLE_RESTAURANT_OWNER") {
-      reqData.navigate("/admin/restaurants");
-    } else {
-      reqData.navigate("/");
-    }
-    dispatch({type: REGISTER_SUCCESS, payload: data.jwt});
+    dispatch({ type: REGISTER_SUCCESS, payload: data.jwt });
+    return true;
   } catch (error) {
-    dispatch({type: REGISTER_FAILURE, payload: error});
+    if (error.response?.status === 400 && error.response.data?.message) {
+      if (reqData.setErrors) {
+        reqData.setErrors({ email: error.response.data.message });
+      }
+    }
+    dispatch({ type: REGISTER_FAILURE, payload: error });
     console.error(error);
+    return false;
   }
-}
+};
+
 
 export const loginUser = (reqData) => async (dispatch) => {
   dispatch({type: LOGIN_REQUEST});
@@ -42,9 +45,17 @@ export const loginUser = (reqData) => async (dispatch) => {
     dispatch({type: LOGIN_SUCCESS, payload: data});
   } catch (error) {
     dispatch({type: LOGIN_FAILURE, payload: error});
+    if (error.response && error.response.status === 400) {
+      if (error.response.data && error.response.data.message === "Email does not exist") {
+        reqData.setErrorMessage("Е-поштата не постои.");
+      } else {
+        reqData.setErrorMessage("Неуспешна најава. Обидете се повторно.");
+      }
+    }
     console.error(error);
   }
 }
+
 
 export const getUser = (jwt) => async (dispatch) => {
   dispatch({type: GET_USER_REQUEST});

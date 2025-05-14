@@ -19,27 +19,28 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Full name is required")
-    @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters")
+    @NotBlank(message = "Целосно име е задолжително")
+    @Size(min = 2, max = 100, message = "Вашето име мора да е помеѓу 2 и 100 карактери")
     private String fullName;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Please provide a valid email address")
+    @NotBlank(message = "Е-маил адресата е задолжителна")
+    @Email(message = "Внесете валидна е-маил адреса")
     private String email;
 
     @OneToOne
     private Cart cart;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @NotBlank(message = "Password is required")
-    @Size(min = 8, message = "Password must be at least 8 characters long")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).*$", message = "Password must contain at least one letter, one number, and one special character")
+    @NotBlank(message = "Лозинката е задолжителна")
+    @Size(min = 8, message = "Лозинката мора да содржи барем 8 карактери")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[@#$%^&+=!]).*$", message = "Лозинката мора да содржи барем една буква, една бројка и барем еден специјален карактер")
     private String password;
 
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;

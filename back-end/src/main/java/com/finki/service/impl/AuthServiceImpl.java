@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         User isEmailExist = userRepository.findByEmail(user.getEmail());
 
         if (isEmailExist != null) {
-            throw new Exception("This Email is Already In Use.");
+            throw new Exception("Оваа Е-адреса веќе постои во нашиот систем.");
         }
 
         User createdUser = new User();
