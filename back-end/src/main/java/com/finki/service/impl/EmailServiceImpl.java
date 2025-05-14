@@ -2,10 +2,12 @@ package com.finki.service.impl;
 
 import com.finki.service.EmailService;
 import jakarta.annotation.PostConstruct;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import java.util.Properties;
@@ -59,48 +61,58 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void sendVerificationEmail(String to, String verificationCode) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(to);
-        message.setSubject("Email Verification - FINKI Food");
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
-                + "<h2>Account Verification</h2>"
-                + "<p>Hi</p>"
-                + "<p>Thanks for signing up! Please use the verification code below to activate your account:</p>"
-                + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
-                + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + verificationCode
-                + "</h1>"
-                + "</div>"
-                + "<p>This code will expire in 60 minutes.</p>"
-                + "<p>If you didn't create an account, please ignore this email.</p>"
-                + "<p>Regards,<br/>FINKI Food Team</p>"
-                + "</div>";
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+            helper.setSubject("Email Verification - FINKI Food");
 
-        message.setText(content);
-        mailSender.send(message);
+            String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
+                    + "<h2>Account Verification</h2>"
+                    + "<p>Thanks for signing up! Please use the verification code below to activate your account:</p>"
+                    + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+                    + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + verificationCode
+                    + "</h1>"
+                    + "</div>"
+                    + "<p>This code will expire in 60 minutes.</p>"
+                    + "<p>If you didn't create an account, please ignore this email.</p>"
+                    + "<p>Regards,<br/>FINKI Food Team</p>"
+                    + "</div>";
+
+            helper.setText(content, true); // true indicates HTML content
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send verification email", e);
+        }
     }
 
     @Override
     public void sendPasswordResetEmail(String to, String resetToken) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(to);
-        message.setSubject("Password Reset - FINKI Food");
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-        String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
-                + "<h2>Password Reset</h2>"
-                + "<p>Hi</p>"
-                + "<p>You requested to reset your password. Please use the code below to reset your password:</p>"
-                + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
-                + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + resetToken + "</h1>"
-                + "</div>"
-                + "<p>This code will expire in 60 minutes.</p>"
-                + "<p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>"
-                + "<p>Regards,<br/>FINKI Food Team</p>"
-                + "</div>";
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+            helper.setSubject("Password Reset - FINKI Food");
 
-        message.setText(content);
-        mailSender.send(message);
+            String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
+                    + "<h2>Password Reset</h2>"
+                    + "<p>You requested to reset your password. Please use the code below to reset your password:</p>"
+                    + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+                    + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + resetToken + "</h1>"
+                    + "</div>"
+                    + "<p>This code will expire in 60 minutes.</p>"
+                    + "<p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>"
+                    + "<p>Regards,<br/>FINKI Food Team</p>"
+                    + "</div>";
+
+            helper.setText(content, true); // true indicates HTML content
+            mailSender.send(mimeMessage);
+        } catch (MessagingException e) {
+            throw new RuntimeException("Failed to send password reset email", e);
+        }
     }
 }
