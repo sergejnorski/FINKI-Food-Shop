@@ -64,11 +64,18 @@ public class EmailServiceImpl implements EmailService {
         message.setTo(to);
         message.setSubject("Email Verification - FINKI Food");
 
-        String content = "Dear Customer,\n\n"
-                + "Please verify your email by entering the following code:\n\n"
-                + verificationCode + "\n\n"
-                + "Thank you,\n"
-                + "FINKI Food Team";
+        String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
+                + "<h2>Account Verification</h2>"
+                + "<p>Hi</p>"
+                + "<p>Thanks for signing up! Please use the verification code below to activate your account:</p>"
+                + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+                + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + verificationCode
+                + "</h1>"
+                + "</div>"
+                + "<p>This code will expire in 60 minutes.</p>"
+                + "<p>If you didn't create an account, please ignore this email.</p>"
+                + "<p>Regards,<br/>FINKI Food Team</p>"
+                + "</div>";
 
         message.setText(content);
         mailSender.send(message);
@@ -81,12 +88,17 @@ public class EmailServiceImpl implements EmailService {
         message.setTo(to);
         message.setSubject("Password Reset - FINKI Food");
 
-        String content = "Dear Customer,\n\n"
-                + "Please use the following code to reset your password:\n\n"
-                + resetToken + "\n\n"
-                + "If you didn't request a password reset, please ignore this email.\n\n"
-                + "Thank you,\n"
-                + "FINKI Food Team";
+        String content = "<div style='font-family: Arial, sans-serif; padding: 20px; max-width: 600px;'>"
+                + "<h2>Password Reset</h2>"
+                + "<p>Hi</p>"
+                + "<p>You requested to reset your password. Please use the code below to reset your password:</p>"
+                + "<div style='background-color: #f2f2f2; padding: 15px; border-radius: 5px; text-align: center; margin: 20px 0;'>"
+                + "<h1 style='color: #4CAF50; letter-spacing: 5px; font-size: 28px;'>" + resetToken + "</h1>"
+                + "</div>"
+                + "<p>This code will expire in 60 minutes.</p>"
+                + "<p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>"
+                + "<p>Regards,<br/>FINKI Food Team</p>"
+                + "</div>";
 
         message.setText(content);
         mailSender.send(message);
