@@ -1,112 +1,75 @@
 package com.finki.controller;
 
-import com.finki.config.JwtProvider;
-import com.finki.model.Cart;
-import com.finki.model.USER_ROLE;
 import com.finki.model.User;
-import com.finki.repository.CartRepository;
-import com.finki.repository.UserRepository;
-import com.finki.request.LoginRequest;
+import com.finki.request.*;
 import com.finki.response.AuthResponse;
-import com.finki.service.impl.CustomUserDetailsService;
+import com.finki.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtProvider jwtProvider;
-    private final CustomUserDetailsService customUserDetailsService;
-    private final CartRepository cartRepository;
+    private final AuthService authService;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtProvider jwtProvider,
-                          CustomUserDetailsService customUserDetailsService, CartRepository cartRepository) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtProvider = jwtProvider;
-        this.customUserDetailsService = customUserDetailsService;
-        this.cartRepository = cartRepository;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) throws Exception {
-
-        User isEmailExist = userRepository.findByEmail(user.getEmail());
-
-        if (isEmailExist != null) {
-            throw new Exception("This Email is Already In Use.");
-        }
-
-        User createdUser = new User();
-        createdUser.setEmail(user.getEmail());
-        createdUser.setFullName(user.getFullName());
-        createdUser.setRole(user.getRole());
-        createdUser.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        User savedUser = userRepository.save(createdUser);
-
-        Cart cart = new Cart();
-        cart.setCustomer(savedUser);
-        cartRepository.save(cart);
-
-        Authentication authentication=authenticate(user.getEmail(),user.getPassword());
-        Collection<? extends GrantedAuthority> authorities=authentication.getAuthorities();
-        String role=authorities.isEmpty()?null:authorities.iterator().next().getAuthority();
-
-        String jwt=jwtProvider.generateToken(authentication);
-
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(jwt);
-        authResponse.setMessage("Register success");
-        authResponse.setRole(savedUser.getRole());
-
-        return new ResponseEntity<>( authResponse, HttpStatus.CREATED);
+    public ResponseEntity<AuthResponse> createUserHandler(@Valid @RequestBody User user) throws Exception {
+        AuthResponse authResponse = authService.signUp(user);
+        return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
 
     @PostMapping("/signin")
     public ResponseEntity<AuthResponse> signin(@RequestBody LoginRequest req) throws Exception {
-
-        String username = req.getEmail();
-        String password = req.getPassword();
-
-        Authentication authentication = authenticate(username, password);
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
-
-        String jwt = jwtProvider.generateToken(authentication);
-
-        AuthResponse authResponse = new AuthResponse();
-        authResponse.setJwt(jwt);
-
-        authResponse.setMessage("Login Success!");
-        authResponse.setRole(USER_ROLE.valueOf(role));
-
+        AuthResponse authResponse = authService.signIn(req);
         return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
-    private Authentication authenticate(String username, String password) {
+    @PostMapping("/verify")
+    public ResponseEntity<AuthResponse> verifyEmail(@RequestBody VerificationRequest req) throws Exception {
+        AuthResponse authResponse = authService.verifyEmail(req);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
 
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
+    @PostMapping("/resend-verification")
+    public ResponseEntity<AuthResponse> resendVerification(@RequestBody ResendVerificationRequest req)
+            throws Exception {
+        AuthResponse authResponse = authService.resendVerificationCode(req);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
 
-        if (userDetails == null) {
-            throw new BadCredentialsException("Invalid Username.");
-        }
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid Password.");
-        }
+    @PostMapping("/forgot-password")
+    public ResponseEntity<AuthResponse> forgotPassword(@RequestBody ForgotPasswordRequest req) throws Exception {
+        AuthResponse authResponse = authService.forgotPassword(req);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
 
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    @PostMapping("/reset-password")
+    public ResponseEntity<AuthResponse> resetPassword(@RequestBody ResetPasswordRequest req) throws Exception {
+        AuthResponse authResponse = authService.resetPassword(req);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

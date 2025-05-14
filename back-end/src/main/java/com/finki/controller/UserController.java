@@ -35,7 +35,7 @@ public class UserController {
             User user = userService.findUserByJwtToken(jwt);
 
             if (user == null) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // Or appropriate status
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
             }
 
             // Check if the address already exists

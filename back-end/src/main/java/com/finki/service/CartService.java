@@ -9,21 +9,21 @@ import java.util.List;
 
 public interface CartService {
 
-    public CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception;
+    CartItem addItemToCart(AddCartItemRequest req, String jwt) throws Exception;
 
-    public CartItem updateCartItemQuantity(Long cartItemId, int quantity) throws Exception;
+    CartItem updateCartItemQuantity(Long cartItemId, int quantity) throws Exception;
 
-    public Cart removeItemFromCart(Long cartItemId, String jwt) throws Exception;
+    Cart removeItemFromCart(Long cartItemId, String jwt) throws Exception;
 
-    public Long calculateCartTotals(Cart cart) throws Exception;
+    Long calculateCartTotals(Cart cart) throws Exception;
 
-    public Cart findCartById(Long id) throws Exception;
+    Cart findCartById(Long id) throws Exception;
 
-    public Cart findCartByUserId(Long userId) throws Exception;
+    Cart findCartByUserId(Long userId) throws Exception;
 
-    public Cart clearCart(Long userId) throws Exception;
+    Cart clearCart(Long userId) throws Exception;
 
-    public List<CartItem> getCartItems(Long cartId) throws Exception;
+    List<CartItem> getCartItems(Long cartId) throws Exception;
 
     Long calculateCartTotalsByRestaurantID(Cart cart, Restaurant restaurant) throws Exception;
 }
