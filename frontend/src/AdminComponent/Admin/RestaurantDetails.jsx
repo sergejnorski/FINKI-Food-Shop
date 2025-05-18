@@ -126,8 +126,6 @@ export const RestaurantDetails = () => {
                     <span className='pr-5'>-</span>
                     <a href={restaurant?.usersRestaurant?.contactInformation?.instagram}><Instagram sx={{fontSize: '2rem'}}/></a>
                     <a href={restaurant?.usersRestaurant?.contactInformation?.twitter}><Twitter sx={{fontSize: '2rem'}}/></a>
-                    <a href="/"><LinkedIn sx={{fontSize: '2rem'}}/></a>
-                    <a href="/"><Facebook sx={{fontSize: '2rem'}}/></a>
                   </div>
                 </div>
             </CardContent>

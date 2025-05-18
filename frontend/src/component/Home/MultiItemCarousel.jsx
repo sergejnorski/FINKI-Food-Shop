@@ -6,7 +6,7 @@ import CarouselItem from './CarouselItem';
 const MultiItemCarousel = ({foods}) =>{
   console.log("foods: ", foods)
   const settings = {
-        dots: true,
+        dots: false,
         infinite: true,
         speed: 500,
         slidesToShow: 5,

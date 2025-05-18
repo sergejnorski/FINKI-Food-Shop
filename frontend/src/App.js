@@ -20,25 +20,36 @@ function App() {
   const {auth} = useSelector(store => store);
 
   useEffect(() => {
-    Promise.resolve().then(() => {
-      const token = auth.jwt || jwt;
+    if (jwt) {
+      dispatch(getUser(jwt));
+      dispatch(getRestaurantByUserId(jwt));
+      dispatch(findCart(jwt));
+      dispatch(getAllEvents(jwt));
+    }
 
-      if (token) {
-        dispatch(getUser(token));
-        dispatch(getRestaurantByUserId(token));
-        dispatch(findCart(token));
-        dispatch(getAllEvents(token));
-      }
+    dispatch(getAllRestaurantsAction());
+    dispatch(getAllFoods());
+  }, [dispatch, jwt]);
 
-      dispatch(getAllRestaurantsAction());
-      dispatch(getAllFoods());
-    });
-  }, [auth.jwt, dispatch, jwt]);
+  // After login, when auth.jwt becomes available
+  useEffect(() => {
+    if (auth.jwt) {
+      // Optional: debounce to let React stabilize
+      const timeout = setTimeout(() => {
+        dispatch(getUser(auth.jwt));
+        dispatch(getRestaurantByUserId(auth.jwt));
+        dispatch(findCart(auth.jwt));
+        dispatch(getAllEvents(auth.jwt));
+      }, 0);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [auth.jwt, dispatch]);
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <CssBaseline/>
-      <Routers/>
+      <CssBaseline />
+      <Routers />
     </ThemeProvider>
   );
 }

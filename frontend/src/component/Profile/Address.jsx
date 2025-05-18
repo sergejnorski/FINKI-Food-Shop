@@ -34,15 +34,15 @@ export const Address = () => {
     city: '',
   };
 
+  const phoneRegex = /^(\+389\s?-?\s?7[0-9]{1}\s?-?\s?[0-9]{3}\s?-?\s?[0-9]{3}|07[0-9]{1}-[0-9]{3}-[0-9]{3})$/;
+
   const validationSchema = Yup.object().shape({
-    location: Yup.string().required('Location Type is required'),
-    streetAddress: Yup.string().required('Street Address is required'),
+    location: Yup.string().required('Името на локацијата е задолжително'),
+    streetAddress: Yup.string().required('Адресата е задолжителна'),
     mobile: Yup.string()
-      .required('Mobile is required')
-      .matches(/^[0-9]+$/, 'Mobile must be a number')
-      .min(10, 'Mobile must be at least 10 digits')
-      .max(15, 'Mobile must be less than 15 digits'),
-    city: Yup.string().required('City is required'),
+      .required('Телефонскиот број е задолжителен')
+      .matches(phoneRegex, 'Внесете валиден телефонски број.'),
+    city: Yup.string().required('Градот е задолжителен'),
   });
 
   const handleOnSubmit = (values) => {
