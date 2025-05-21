@@ -11,7 +11,7 @@ import EventCard from "../Profile/EventCard";
 export const Home = () => {
   const dispatch = useDispatch()
   const {restaurant, auth} = useSelector(store => store);
-  const foods = restaurant?.foods || ["food1", "food2"]; // Use foods directly
+  const foods = restaurant?.foods || ["food1", "food2"];
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFood, setSelectedFood] = useState(null);
 
@@ -56,7 +56,7 @@ export const Home = () => {
 
   const goToRestaurant = () => {
     if (selectedFood && auth.user) {
-      navigate(`/restaurant/${selectedFood.restaurant.address.city}/${selectedFood.restaurant.name}/${selectedFood.restaurant.id}`);
+      navigate(`/restaurant/${restaurant.address.city}/${restaurant.name}/${restaurant.id}`)
     } else if (!auth.user) {
       navigate("/account/login");
     }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useMemo} from 'react'
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from 'react-slick';
@@ -15,11 +15,17 @@ const MultiItemCarousel = ({foods}) =>{
         autoplaySpeed:2000,
         arrows:false // da moze avtomatski da se menuva se brisat strelkite
       };
+
+    const randomFoods = useMemo(() => {
+      const shuffled = [...foods].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, 20);
+    }, [foods]);
+
     return(
         <div>
             <Slider {...settings}>
-                {foods.map((item)=><CarouselItem key={item}
-                 image={item.images} title={item.title} price={item?.price} restaurant={item?.restaurant}/>)}
+                {randomFoods.map((item)=><CarouselItem key={item}
+                 image={item.images} title={item.title} price={item?.price} restaurant={item?.restaurant} category={item.foodCategory.name}/>)}
             </Slider>
         </div>
     )

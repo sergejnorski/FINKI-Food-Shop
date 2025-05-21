@@ -11,7 +11,7 @@ import React, {useEffect, useState} from 'react'
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import MenuCard from './MenuCard';
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getRestaurantById, getRestaurantsCategory} from "../../State/Restaurant/Action";
 import {getMenuItemsByRestaurantId} from "../../State/Menu/Action";
@@ -28,8 +28,10 @@ const RestaurantDetails = () => {
   const dispatch = useDispatch();
   const jwt = localStorage.getItem("jwt");
   const {restaurant, menu} = useSelector(store => store);
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const allItems = restaurant?.foods || ["food1", "food2"];
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const {id} = useParams();
+  const location = useLocation();
 
   const handleFilter = (e, value) => {
     setFoodType(value)
@@ -39,13 +41,21 @@ const RestaurantDetails = () => {
     setSelectedCategory(value)
   }
   useEffect(() => {
-    dispatch(getRestaurantById({jwt, restaurantId: id}));
-    dispatch(getRestaurantsCategory({jwt, restaurantId: id}));
+    dispatch(getRestaurantById({ jwt, restaurantId: id }));
+    dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
+
+    const params = new URLSearchParams(location.search);
+    const preselectedCategory = params.get("category");
+    if (preselectedCategory) {
+      setSelectedCategory(preselectedCategory);
+    } else {
+      setSelectedCategory("");
+    }
   }, []);
 
   useEffect(() => {
-    console.log(foodType)
-    console.log(selectedCategory)
+    if (selectedCategory === null) return;
+
     dispatch(getMenuItemsByRestaurantId({
       jwt,
       restaurantId: id,
@@ -54,8 +64,6 @@ const RestaurantDetails = () => {
       seasonal: foodType === "seasonal",
       foodCategory: selectedCategory,
     }));
-    console.log("restaurant: ", restaurant)
-    console.log("menu: ", menu)
   }, [selectedCategory, foodType]);
 
   return (
@@ -132,7 +140,7 @@ const RestaurantDetails = () => {
           </div>
         </div>
         <div className='space-y-5 lg:w-[80%] lg:pl-10'>
-          {menu.menuItems.map((item) => <MenuCard item={item}/>)}
+          {menu.menuItems.map((item) => <MenuCard item={item} allItems={allItems} />)}
         </div>
       </section>
     </div>

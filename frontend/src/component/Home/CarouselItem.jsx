@@ -4,14 +4,14 @@ import {useSelector} from "react-redux";
 import {Button} from "@mui/material";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
-const CarouselItem = ({image,title, price, restaurant}) =>{
+const CarouselItem = ({image,title, price, restaurant, category}) =>{
 
   const navigate = useNavigate();
   const {auth} = useSelector(store => store);
 
   const handleAddItemToCart = () => {
     if (auth.user) {
-      navigate(`/restaurant/${restaurant.address.city}/${restaurant.name}/${restaurant.id}`);
+      navigate(`/restaurant/${restaurant.address.city}/${restaurant.name}/${restaurant.id}?category=${category}`)
     } else {
       navigate('/account/login');
     }
